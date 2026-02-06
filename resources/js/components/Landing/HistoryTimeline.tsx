@@ -41,7 +41,7 @@ const events: TimelineEvent[] = [
         description: "Back-to-back 3rd place finishes in '24 and '25. The team enters 2026 as the 'Gold Standard' for technical excellence.",
         icon: Flag,
         color: 'bg-primary',
-        image: '/images/dave_truck_on_racing_tracks_as_first_2.jpg'
+        image: '/images/dave_truck_on_racing_tracks_as_first_3.jpg'
     }
 ];
 
