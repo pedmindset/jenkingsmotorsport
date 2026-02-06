@@ -4,7 +4,7 @@ import { PropsWithChildren, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import SEO from '@/components/site-seo';
+import SEO from '@/components/seo';
 
 interface LandingLayoutProps extends PropsWithChildren {
     title: string;
