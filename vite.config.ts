@@ -21,6 +21,9 @@ export default defineConfig({
             formVariants: true,
         }),
     ],
+    server: {
+        host: 'jenkinsmotorsport.test',
+    },
     esbuild: {
         jsx: 'automatic',
     },
