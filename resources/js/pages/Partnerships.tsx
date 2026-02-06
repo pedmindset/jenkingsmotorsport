@@ -24,9 +24,9 @@ interface Partner {
 export default function Partnerships() {
     const technicalPartners: Partner[] = [
         {
-            name: 'LKQ',
-            role: 'The Backbone of the UK Aftermarket',
-            description: 'As the UK’s leading distributor of automotive aftermarket parts, LKQ Euro Car Parts provides Jenkins Motorsports with a seamless, high-velocity supply chain. Our partnership focuses on testing high-performance components under the extreme thermal and mechanical loads of Division 1 racing, feeding critical reliability data back into the UK’s largest automotive network.',
+            name: 'LKQ UK and Ireland',
+            role: 'A group of four market-leading businesses',
+            description: 'Driving excellence in parts, equipment and training across automotive, leisure and marine sectors. LKQ UK and Ireland provides Jenkins Motorsports with a seamless, high-velocity supply chain, testing high-performance components under the extreme thermal and mechanical loads of Division 1 racing.',
             technicalFact: 'Supply chain velocity tested: <12h turnaround for critical race-spec components.',
             icon: '/images/LKQ_white.webp',
             theme: {
@@ -36,7 +36,7 @@ export default function Partnerships() {
                 bar: 'bg-blue-600'
             },
             image: '/images/team_working_on_truck.jpg',
-            link: 'https://lkqcorp.com/'
+            link: 'https://ukandireland.lkqeurope.com/'
         },
         {
             name: 'Morris Lubricants',

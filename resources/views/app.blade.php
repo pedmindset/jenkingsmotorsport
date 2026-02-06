@@ -35,7 +35,32 @@
         }
     </style>
 
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    @php
+        $meta = $page['props']['meta'] ?? [];
+        $title = $meta['title'] ?? config('app.name', 'Jenkins Motorsport');
+        $description = $meta['description'] ?? 'The gold standard of British Truck Racing.';
+        $image = $meta['image'] ?? '/images/Jenkins_logo_with_text_color_white.png';
+        $url = $meta['url'] ?? url()->current();
+        $type = $meta['type'] ?? 'website';
+    @endphp
+
+    <title inertia>{{ $title }}</title>
+    <meta name="description" content="{{ $description }}" inertia>
+    <link rel="canonical" href="{{ $url }}" inertia>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{{ $type }}" inertia>
+    <meta property="og:url" content="{{ $url }}" inertia>
+    <meta property="og:title" content="{{ $title }}" inertia>
+    <meta property="og:description" content="{{ $description }}" inertia>
+    <meta property="og:image" content="{{ asset($image) }}" inertia>
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" inertia>
+    <meta name="twitter:url" content="{{ $url }}" inertia>
+    <meta name="twitter:title" content="{{ $title }}" inertia>
+    <meta name="twitter:description" content="{{ $description }}" inertia>
+    <meta name="twitter:image" content="{{ asset($image) }}" inertia>
 
     <link rel="icon" href="/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">

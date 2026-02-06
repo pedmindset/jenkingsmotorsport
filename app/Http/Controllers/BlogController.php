@@ -19,6 +19,10 @@ class BlogController extends Controller
                 ->orderBy('published_at', 'desc')
                 ->get()
                 ->map(fn($post) => $this->transformPost($post)),
+            'meta' => [
+                'title' => 'Paddock Pass',
+                'description' => 'Direct from the paddock. Exclusive stories, technical updates, and championship race reports from Jenkins Motorsports.',
+            ],
         ]);
     }
 
@@ -32,6 +36,10 @@ class BlogController extends Controller
                 ->get()
                 ->map(fn($post) => $this->transformPost($post)),
             'filter' => ['type' => 'Category', 'name' => $category->name],
+            'meta' => [
+                'title' => $category->name . ' | Paddock Pass',
+                'description' => "Explore all Paddock Pass articles categorized under {$category->name}.",
+            ],
         ]);
     }
 
@@ -45,6 +53,10 @@ class BlogController extends Controller
                 ->get()
                 ->map(fn($post) => $this->transformPost($post)),
             'filter' => ['type' => 'Tag', 'name' => $tag->name],
+            'meta' => [
+                'title' => $tag->name . ' | Paddock Pass',
+                'description' => "Explore all Paddock Pass articles tagged with {$tag->name}.",
+            ],
         ]);
     }
 
@@ -57,6 +69,11 @@ class BlogController extends Controller
 
         return Inertia::render('BlogPost', [
             'post' => $this->transformPost($post, true),
+            'meta' => [
+                'title' => $post->title,
+                'description' => $post->excerpt,
+                'image' => $post->image_path,
+            ],
         ]);
     }
 

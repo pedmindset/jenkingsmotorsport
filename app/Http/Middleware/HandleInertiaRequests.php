@@ -43,6 +43,13 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'meta' => [
+                'title' => 'Jenkins Motorsports',
+                'description' => 'The gold standard of British Truck Racing. 1,200 BHP titans, championship history, and the next generation of motorsport legacy.',
+                'image' => '/images/Jenkins_logo_with_text_color_white.png',
+                'url' => $request->url(),
+                'type' => 'website',
+            ],
         ];
     }
 }
