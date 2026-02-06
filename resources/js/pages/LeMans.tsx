@@ -291,10 +291,35 @@ export default function LeMans() {
         },
     ];
 
+    const eventSchema = {
+        "@context": "https://schema.org",
+        "@type": "SportsEvent",
+        "name": "24 Heures Camions 2026",
+        "startDate": "2026-09-26",
+        "endDate": "2026-09-27",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "location": {
+            "@type": "Place",
+            "name": "Circuit Bugatti",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Le Mans",
+                "addressCountry": "FR"
+            }
+        },
+        "performer": {
+            "@type": "SportsTeam",
+            "name": "Jenkins Motorsports"
+        },
+        "description": "The French round of the British Truck Racing Championship and 24 Heures Camions at Le Mans."
+    };
+
     return (
         <LandingLayout
             title="Le Mans International | 24 Heures Camions"
-            description="Jenkins Motorsports takes on the world at the iconic Circuit Bugatti, Le Mans. Experience the journey from Stone to France."
+            description="Jenkins Motorsports takes on the world at the iconic Circuit Bugatti, Le Mans. Experience the journey from Stone to France for the 24 Heures Camions."
+            image="/images/multiple_trucks_on_racing_tracks_2.jpg"
+            schema={eventSchema}
         >
             <div ref={containerRef} className="bg-black min-h-screen">
 

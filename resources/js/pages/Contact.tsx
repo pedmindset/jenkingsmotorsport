@@ -46,8 +46,31 @@ export default function Contact() {
 
     const isSuccess = (formType === 'contact' ? contactForm.recentlySuccessful : sponsorshipForm.recentlySuccessful);
 
+    const contactSchema = {
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        "name": "Contact Jenkins Motorsports",
+        "mainEntity": {
+            "@type": "Organization",
+            "name": "Jenkins Motorsports",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Unit 5, Silverstone Park",
+                "addressLocality": "Towcester",
+                "postalCode": "NN12 8FU",
+                "addressCountry": "UK"
+            },
+            "telephone": "+44 1327 858 000",
+            "email": "enquiries@jenkinsmotorsport.com"
+        }
+    };
+
     return (
-        <LandingLayout title="Contact Us">
+        <LandingLayout
+            title="Contact Us"
+            description="Contact Jenkins Motorsports. Headquarters in Towcester, UK. Get in touch for sponsorship inquiries, press accreditation, or general questions."
+            schema={contactSchema}
+        >
             <Head title="Contact Us" />
 
             {/* Hero Section */}

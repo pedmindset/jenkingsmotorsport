@@ -10,9 +10,13 @@ import Footer from '@/components/Landing/Footer';
 interface LandingLayoutProps extends PropsWithChildren {
     title: string;
     description?: string;
+    image?: string;
+    url?: string;
+    type?: 'website' | 'article';
+    schema?: string | object;
 }
 
-export default function LandingLayout({ title, description, children }: LandingLayoutProps) {
+export default function LandingLayout({ title, description, image, url, type, schema, children }: LandingLayoutProps) {
     const [isScrolled, setIsScrolled] = useState(false);
 
     // Handle scroll effect for navbar
@@ -36,7 +40,14 @@ export default function LandingLayout({ title, description, children }: LandingL
 
     return (
         <div className="min-h-screen bg-background font-sans text-foreground selection:bg-primary selection:text-white">
-            <SEO title={title} description={description} />
+            <SEO
+                title={title}
+                description={description}
+                image={image}
+                url={url}
+                type={type}
+                schema={schema}
+            />
 
             {/* Sticky Glass Navbar */}
             <nav
@@ -44,7 +55,7 @@ export default function LandingLayout({ title, description, children }: LandingL
                     'fixed top-0 z-50 w-full transition-all duration-300 border-b border-transparent',
                     isScrolled
                         ? 'bg-background/80 backdrop-blur-md border-border/40 py-2'
-                        : 'bg-transparent py-4'
+                        : 'bg-transparent py-2 md:py-4'
                 )}
             >
                 <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
@@ -53,7 +64,7 @@ export default function LandingLayout({ title, description, children }: LandingL
                         <img
                             src="/images/Jenkins_logo_with_text_color_white.png"
                             alt="Jenkins Motorsports"
-                            className="h-16 w-auto object-contain transition-transform group-hover:scale-105"
+                            className="h-12 md:h-16 w-auto object-contain transition-transform group-hover:scale-105"
                         />
                     </Link>
 
@@ -87,7 +98,7 @@ export default function LandingLayout({ title, description, children }: LandingL
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="right" className="w-[300px] border-l-border bg-background/95 backdrop-blur-xl">
-                            <div className="flex flex-col gap-8 mt-10">
+                            <div className="flex flex-col gap-8 mt-10 pl-6">
                                 {navLinks.map((link) => (
                                     <Link
                                         key={link.name}

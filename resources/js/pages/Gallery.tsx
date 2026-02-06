@@ -1,5 +1,6 @@
 import LandingLayout from '@/layouts/LandingLayout';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { Camera, Wrench, Gauge, History, X, ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -128,6 +129,7 @@ const categories = [
 ];
 
 export default function Gallery() {
+    const { appUrl } = usePage<any>().props;
     const [activeCategory, setActiveCategory] = useState('all');
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -155,8 +157,21 @@ export default function Gallery() {
         setCurrentImageIndex((prev) => (prev - 1 + filteredImages.length) % filteredImages.length);
     };
 
+    const gallerySchema = {
+        "@context": "https://schema.org",
+        "@type": "ImageGallery",
+        "name": "Jenkins Motorsports Gallery",
+        "description": "A visual chronicle of power, precision, and the paddock.",
+        "image": galleryImages.map(img => `${appUrl}${img.src}`)
+    };
+
     return (
-        <LandingLayout title="Gallery | Speed in Focus">
+        <LandingLayout
+            title="Gallery | Speed in Focus"
+            description="The Theatre of Heavy Metal. A visual chronicle of power, precision, and the paddock. View the Jenkins Motorsports gallery."
+            image="/images/dave_truck_on_racing_tracks_as_first_2.jpg"
+            schema={gallerySchema}
+        >
             <div className="bg-black min-h-screen">
 
                 {/* Hero Section */}

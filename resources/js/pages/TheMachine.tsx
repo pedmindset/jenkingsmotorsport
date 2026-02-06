@@ -1,5 +1,5 @@
 import LandingLayout from '@/layouts/LandingLayout';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import {
     Gauge, Droplets, Settings, Zap, Activity, Scale, Compass, Truck,
@@ -8,6 +8,7 @@ import {
 import { useRef, useState } from 'react';
 
 export default function TheMachine() {
+    const { appUrl } = usePage<any>().props;
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({ target: containerRef });
     const y = useTransform(scrollYProgress, [0, 1], [0, 500]);
@@ -26,8 +27,37 @@ export default function TheMachine() {
         { label: 'Axle Setup', value: 'MD106 / MD107 with SYN2001K / SYN2002K', icon: Settings },
     ];
 
+    const truckSchema = {
+        "@context": "https://schema.org/",
+        "@type": "Vehicle",
+        "name": "#69 MAN TGX Racing Truck",
+        "description": "The 1,160 BHP MAN TGX racing truck driven by Dave Jenkins. Features a MAN D26 engine, ZF 16-speed manual transmission, and custom Jenkins Motorsport engineering.",
+        "image": `${appUrl}/images/dave_truck_on_racing_tracks_2.jpg`,
+        "brand": {
+            "@type": "Brand",
+            "name": "MAN"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "Jenkins Motorsports"
+        },
+        "model": "TGX",
+        "vehicleConfiguration": "Racing Truck",
+        "vehicleEngine": {
+            "@type": "EngineSpecification",
+            "engineType": "MAN D26 Six-Cylinder Diesel Turbocharged",
+            "enginePower": "1160 BHP",
+            "engineDisplacement": "12.4 Litres"
+        }
+    };
+
     return (
-        <LandingLayout title="The Machine | #69 MAN TGX">
+        <LandingLayout
+            title="The Machine | #69 MAN TGX"
+            description="Discover the 1,160 BHP MAN TGX #69. A 5.5-tonne racing beast engineered by Jenkins Motorsports. See the specs, the engine, and the technology behind British Truck Racing's finest."
+            image="/images/dave_truck_on_racing_tracks_2.jpg"
+            schema={truckSchema}
+        >
             <div ref={containerRef} className="bg-black min-h-screen">
 
                 {/* Hero Banner with "Rumble" Animation */}

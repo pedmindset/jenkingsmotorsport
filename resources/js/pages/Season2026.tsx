@@ -158,8 +158,25 @@ export default function Season2026() {
         },
     ];
 
+    const seasonSchema = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "2026 British Truck Racing Championship Season",
+        "description": "The 2026 race calendar for Jenkins Motorsports.",
+        "itemListElement": races.map((race, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": `${race.venue} - ${race.title}`
+        }))
+    };
+
     return (
-        <LandingLayout title="2026 Season | The Pursuit of the #1 Plate">
+        <LandingLayout
+            title="2026 Season | The Pursuit of the #1 Plate"
+            description="7 Rounds. 34 Races. Follow Jenkins Motorsports' 2026 British Truck Racing Championship campaign. Race calendar, results, and countdown."
+            image="/images/dave_truck_on_racing_tracks_as_first.jpg"
+            schema={seasonSchema}
+        >
             <div className="bg-black min-h-screen">
 
                 {/* Hero Section */}

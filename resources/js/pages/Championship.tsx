@@ -53,7 +53,11 @@ export default function Championship() {
     const standings = activeYear === '2025' ? standings2025 : standings2026;
 
     return (
-        <LandingLayout title="Championship | The Leaderboard">
+        <LandingLayout
+            title="Championship | The Leaderboard"
+            description="The Leaderboard. Numbers Don't Lie. Grit Doesn't Quit. Follow the 2026 British Truck Racing Championship standings and history."
+            image="/images/dave_standing_and_lifting_trophy_as_first_with_the_other_winners.jpg"
+        >
             <div className="bg-black min-h-screen">
 
                 {/* Hero Section */}
@@ -104,8 +108,8 @@ export default function Championship() {
                                     <button
                                         onClick={() => setActiveYear('2025')}
                                         className={`px-6 py-3 font-heading font-bold uppercase text-sm transition-all ${activeYear === '2025'
-                                                ? 'bg-primary text-white'
-                                                : 'text-muted-foreground hover:text-white'
+                                            ? 'bg-primary text-white'
+                                            : 'text-muted-foreground hover:text-white'
                                             }`}
                                     >
                                         2025 Final
@@ -113,8 +117,8 @@ export default function Championship() {
                                     <button
                                         onClick={() => setActiveYear('2026')}
                                         className={`px-6 py-3 font-heading font-bold uppercase text-sm transition-all ${activeYear === '2026'
-                                                ? 'bg-primary text-white'
-                                                : 'text-muted-foreground hover:text-white'
+                                            ? 'bg-primary text-white'
+                                            : 'text-muted-foreground hover:text-white'
                                             }`}
                                     >
                                         2026 Season
@@ -149,8 +153,8 @@ export default function Championship() {
                                                         ease: "easeOut"
                                                     }}
                                                     className={`relative transition-colors ${driver.isJenkins
-                                                            ? 'bg-primary/20 hover:bg-primary/30'
-                                                            : 'hover:bg-white/5'
+                                                        ? 'bg-primary/20 hover:bg-primary/30'
+                                                        : 'hover:bg-white/5'
                                                         }`}
                                                 >
                                                     {/* Jenkins Glow Effect */}
@@ -248,8 +252,8 @@ export default function Championship() {
                                         viewport={{ once: true }}
                                         transition={{ delay: index * 0.1 }}
                                         className={`relative p-6 border text-center group hover:scale-105 transition-transform ${item.highlight
-                                                ? 'bg-gradient-to-b from-yellow-500/20 to-yellow-500/5 border-yellow-500'
-                                                : 'bg-secondary/20 border-white/10 hover:border-primary/50'
+                                            ? 'bg-gradient-to-b from-yellow-500/20 to-yellow-500/5 border-yellow-500'
+                                            : 'bg-secondary/20 border-white/10 hover:border-primary/50'
                                             }`}
                                     >
                                         {item.highlight && (
@@ -305,10 +309,10 @@ export default function Championship() {
                                         viewport={{ once: true }}
                                         transition={{ delay: index * 0.1 }}
                                         className={`relative p-6 border transition-all hover:scale-105 ${contender.threat === 'jenkins'
-                                                ? 'bg-primary/20 border-primary'
-                                                : contender.threat === 'extreme'
-                                                    ? 'bg-destructive/10 border-destructive/50'
-                                                    : 'bg-secondary/20 border-white/10'
+                                            ? 'bg-primary/20 border-primary'
+                                            : contender.threat === 'extreme'
+                                                ? 'bg-destructive/10 border-destructive/50'
+                                                : 'bg-secondary/20 border-white/10'
                                             }`}
                                     >
                                         <span className="font-heading font-black text-5xl text-white/10 absolute top-2 right-4">

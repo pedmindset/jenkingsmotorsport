@@ -67,8 +67,25 @@ const TimelineSection = ({
 };
 
 export default function Legacy() {
+    const legacySchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Jenkins Motorsports",
+        "foundingDate": "1984",
+        "founder": {
+            "@type": "Person",
+            "name": "Tony Jenkins"
+        },
+        "description": "The gold standard of British Truck Racing since 1984."
+    };
+
     return (
-        <LandingLayout title="Legacy | The Dynasty">
+        <LandingLayout
+            title="Legacy | The Dynasty"
+            description="Forty Years. Two Generations. The story of Jenkins Motorsports is the story of British Truck Racing itself. Explore the timeline from 1984 to 2026."
+            image="/images/tony_jenkins_championship_truck.jpg"
+            schema={legacySchema}
+        >
             <div className="bg-black text-white">
 
                 {/* Hero Section */}

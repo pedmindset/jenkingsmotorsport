@@ -1,11 +1,12 @@
 import LandingLayout from '@/layouts/LandingLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { ArrowRight, Activity, Cpu, Wind, gauge, Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Welcome() {
+    const { appUrl } = usePage<any>().props;
     const targetDate = new Date('2026-04-04T09:00:00');
     const displayDate = targetDate > new Date() ? targetDate : new Date('2027-04-01T09:00:00');
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
@@ -33,17 +34,37 @@ export default function Welcome() {
     const timelineRef = useRef(null);
     const isInView = useInView(timelineRef, { once: true, margin: "-100px" });
 
+    const teamSchema = {
+        "@context": "https://schema.org",
+        "@type": "SportsTeam",
+        "name": "Jenkins Motorsport",
+        "url": appUrl,
+        "logo": `${appUrl}/images/Jenkins_logo_with_text_color_white.png`,
+        "athlete": [
+            {
+                "@type": "Person",
+                "name": "Dave Jenkins",
+                "jobTitle": "Driver & Engineer"
+            }
+        ],
+        "knowsAbout": "Truck Racing",
+        "foundingDate": "1984"
+    };
+
     return (
         <LandingLayout
             title="Jenkins Motorsports | The Architecture of Power"
             description="1,160 BHP. 5,500 Nm Torque. 40 Years of DNA. Hunt the 2026 Title with Jenkins Motorsports."
+            image="/images/dave_truck_on_racing_tracks_as_first_2.jpg"
+            url={appUrl}
+            schema={teamSchema}
         >
             {/* 1. HERO COCKPIT: THE ARCHITECTURE OF POWER */}
-            <section className="relative h-screen w-full overflow-hidden bg-black">
+            <section className="relative h-[100dvh] w-full overflow-hidden bg-black">
                 {/* Video Background */}
-                <div className="absolute inset-0 z-0 select-none pointer-events-none">
+                <div className="absolute top-0 inset-0 z-0 select-none pointer-events-none">
                     <iframe
-                        className="w-[300%] h-[300%] -ml-[100%] -mt-[100%] opacity-60 md:w-[150%] md:h-[150%] md:-ml-[25%] md:-mt-[25%] object-cover"
+                        className="absolute top-1/2 left-1/2 w-[500%] h-[500%] -translate-x-1/2 -translate-y-1/2 opacity-60 object-cover landscape:w-[175%] landscape:h-[175%]"
                         src="https://www.youtube.com/embed/-jiZDvSDv8Y?autoplay=1&mute=1&loop=1&playlist=-jiZDvSDv8Y&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         title="Background Video"

@@ -1,7 +1,7 @@
 import LandingLayout from '@/layouts/LandingLayout';
 import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import { Download, Check, Zap, Gauge, Disc, ArrowRight } from 'lucide-react';
+import { Download, Check, Zap, Gauge, Disc, ArrowRight, Settings, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Define partner data structure
@@ -24,6 +24,36 @@ interface Partner {
 export default function Partnerships() {
     const technicalPartners: Partner[] = [
         {
+            name: 'LKQ',
+            role: 'The Backbone of the UK Aftermarket',
+            description: 'As the UK’s leading distributor of automotive aftermarket parts, LKQ Euro Car Parts provides Jenkins Motorsports with a seamless, high-velocity supply chain. Our partnership focuses on testing high-performance components under the extreme thermal and mechanical loads of Division 1 racing, feeding critical reliability data back into the UK’s largest automotive network.',
+            technicalFact: 'Supply chain velocity tested: <12h turnaround for critical race-spec components.',
+            icon: Settings,
+            theme: {
+                glow: 'from-blue-600 to-blue-400/50',
+                iconBg: 'bg-blue-600/10',
+                iconText: 'text-blue-500',
+                bar: 'bg-blue-600'
+            },
+            image: '/images/team_working_on_truck.jpg',
+            link: 'https://lkqcorp.com/'
+        },
+        {
+            name: 'Equipment Hub Ltd',
+            role: 'Precision Procurement for Global Projects',
+            description: 'Equipment Hub Ltd specializes in the procurement and supply of heavy equipment for international engineering and construction projects. This alliance bridges the gap between elite heavy-duty motorsport and the global machinery sector, utilizing the #69 MAN TGX as a flagship for industrial reliability and power.',
+            technicalFact: 'Heavy equipment sourcing network spans 3 continents for project-critical machinery.',
+            icon: Truck,
+            theme: {
+                glow: 'from-blue-600 to-blue-400/50',
+                iconBg: 'bg-blue-600/10',
+                iconText: 'text-blue-500',
+                bar: 'bg-blue-600'
+            },
+            image: '/images/exploring-the-abandoned-machinery-and-vehicles-at-2025-10-06-13-42-12-utc.jpg',
+            link: 'https://equipmenthub.ltd/'
+        },
+        {
             name: 'Morris Lubricants',
             role: 'The Chemical Edge',
             description: 'For over a decade, Jenkins Motorsports has been a primary development partner, testing high-performance oils like the Versimax range.',
@@ -35,38 +65,8 @@ export default function Partnerships() {
                 iconText: 'text-primary',
                 bar: 'bg-primary'
             },
-            image: '/images/team_working_on_truck.jpg',
+            image: '/images/morris_lubricant.jpg',
             link: 'https://www.morrislubricants.co.uk/'
-        },
-        {
-            name: 'Giti Tire',
-            role: 'The Contact Patch',
-            description: 'Relying on Giti Race-Tuned GTR92 tires to translate 5,500 Nm of torque into forward motion on the track.',
-            technicalFact: 'Providing telemetric data on tire pressure spikes and tread temp distribution.',
-            icon: Zap,
-            theme: {
-                glow: 'from-amber-500 to-amber-500/50',
-                iconBg: 'bg-amber-500/10',
-                iconText: 'text-amber-500',
-                bar: 'bg-amber-500'
-            },
-            image: '/images/dave_truck_on_racing_tracks_as_first_2.jpg',
-            link: 'https://www.giti.com/'
-        },
-        {
-            name: 'Juratek',
-            role: 'Stopping Power',
-            description: 'Defining the Gold Standard for heavy-duty braking using racing discs and pads in conjunction with our water-cooled system.',
-            technicalFact: 'Withstanding thermal shock from 100mph to 30mph in seconds without shattering.',
-            icon: Disc,
-            theme: {
-                glow: 'from-destructive to-destructive/50',
-                iconBg: 'bg-destructive/10',
-                iconText: 'text-destructive',
-                bar: 'bg-destructive'
-            },
-            image: '/images/dave_truck_passing_another_truck.jpg',
-            link: 'https://www.juratek.com/'
         }
     ];
 
@@ -113,7 +113,11 @@ export default function Partnerships() {
     ];
 
     return (
-        <LandingLayout title="Partnerships | Technical Alliances">
+        <LandingLayout
+            title="Partnerships | Technical Alliances"
+            description="Technical Alliances & ROI. Partner with Jenkins Motorsports to test your products in the most extreme conditions. Join Morris Lubricants, Giti Tire, and more."
+            image="/images/team_working_on_truck.jpg"
+        >
             <div className="bg-black min-h-screen">
 
                 {/* Hero Section */}

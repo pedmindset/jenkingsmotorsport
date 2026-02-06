@@ -20,14 +20,33 @@ interface Filter {
 }
 
 export default function Blog({ posts, filter }: { posts: Post[], filter?: Filter }) {
+    const { appUrl } = usePage<any>().props;
+
     const seoDescription = filter
         ? `Explore all Paddock Pass articles categorized under ${filter.name}. Get exclusive insights into Jenkins Motorsports.`
         : "Direct from the paddock. Exclusive stories, technical updates, and championship race reports from Jenkins Motorsports.";
+
+    const blogSchema = {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Jenkins Motorsports Paddock Pass",
+        "description": "Exclusive stories, technical updates, and championship race reports from Jenkins Motorsports.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Jenkins Motorsports",
+            "logo": {
+                "@type": "ImageObject",
+                "url": `${appUrl}/images/Jenkins_logo_with_text_color_white.png`
+            }
+        }
+    };
 
     return (
         <LandingLayout
             title={filter ? `${filter.name}` : "Paddock Pass"}
             description={seoDescription}
+            image="/images/dave_taking_picture_with_truck.jpg"
+            schema={blogSchema}
         >
 
             <div className="pt-32 pb-12 md:pt-48 md:pb-24 overflow-hidden bg-black">

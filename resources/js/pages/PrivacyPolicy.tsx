@@ -3,7 +3,10 @@ import { Head } from '@inertiajs/react';
 
 export default function PrivacyPolicy() {
     return (
-        <LandingLayout title="Privacy Policy">
+        <LandingLayout
+            title="Privacy Policy"
+            description="Jenkins Motorsports Privacy Policy. Learn how we collect, use, and protect your personal data."
+        >
             <Head title="Privacy Policy" />
             <div className="pt-32 pb-24 container mx-auto px-4 md:px-6">
                 <h1 className="font-heading text-4xl md:text-5xl font-black uppercase italic text-white mb-8">Privacy Policy</h1>

@@ -3,7 +3,10 @@ import { Head } from '@inertiajs/react';
 
 export default function TermsOfService() {
     return (
-        <LandingLayout title="Terms of Service">
+        <LandingLayout
+            title="Terms of Service"
+            description="Jenkins Motorsports Terms of Service. Read the rules and regulations for using our website."
+        >
             <Head title="Terms of Service" />
             <div className="pt-32 pb-24 container mx-auto px-4 md:px-6">
                 <h1 className="font-heading text-4xl md:text-5xl font-black uppercase italic text-white mb-8">Terms of Service</h1>
