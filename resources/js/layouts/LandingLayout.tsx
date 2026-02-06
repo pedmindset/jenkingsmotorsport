@@ -69,12 +69,12 @@ export default function LandingLayout({ title, description, image, url, type, sc
                     </Link>
 
                     {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-8">
+                    <div className="hidden md:flex items-center gap-4 lg:gap-8">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="font-heading text-sm font-bold uppercase tracking-widest text-white hover:text-primary transition-colors relative group"
+                                className="font-heading text-xs lg:text-sm font-bold uppercase tracking-widest text-white hover:text-primary transition-colors relative group"
                             >
                                 {link.name}
                                 <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full -skew-x-12" />

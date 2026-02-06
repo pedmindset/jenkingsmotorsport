@@ -39,21 +39,6 @@ export default function Partnerships() {
             link: 'https://lkqcorp.com/'
         },
         {
-            name: 'Equipment Hub Ltd',
-            role: 'Precision Procurement for Global Projects',
-            description: 'Equipment Hub Ltd specializes in the procurement and supply of heavy equipment for international engineering and construction projects. This alliance bridges the gap between elite heavy-duty motorsport and the global machinery sector, utilizing the #69 MAN TGX as a flagship for industrial reliability and power.',
-            technicalFact: 'Heavy equipment sourcing network spans 3 continents for project-critical machinery.',
-            icon: Truck,
-            theme: {
-                glow: 'from-blue-600 to-blue-400/50',
-                iconBg: 'bg-blue-600/10',
-                iconText: 'text-blue-500',
-                bar: 'bg-blue-600'
-            },
-            image: '/images/exploring-the-abandoned-machinery-and-vehicles-at-2025-10-06-13-42-12-utc.jpg',
-            link: 'https://equipmenthub.ltd/'
-        },
-        {
             name: 'Morris Lubricants',
             role: 'The Chemical Edge',
             description: 'For over a decade, Jenkins Motorsports has been a primary development partner, testing high-performance oils like the Versimax range.',
@@ -67,6 +52,21 @@ export default function Partnerships() {
             },
             image: '/images/morris_lubricant.jpg',
             link: 'https://www.morrislubricants.co.uk/'
+        },
+        {
+            name: 'Equipment Hub Ltd',
+            role: 'Precision Procurement for Global Projects',
+            description: 'Equipment Hub Ltd specializes in the procurement and supply of heavy equipment for international engineering and construction projects. This alliance bridges the gap between elite heavy-duty motorsport and the global machinery sector, utilizing the #69 MAN TGX as a flagship for industrial reliability and power.',
+            technicalFact: 'Heavy equipment sourcing network spans 3 continents for project-critical machinery.',
+            icon: Truck,
+            theme: {
+                glow: 'from-blue-600 to-blue-400/50',
+                iconBg: 'bg-blue-600/10',
+                iconText: 'text-blue-500',
+                bar: 'bg-blue-600'
+            },
+            image: '/images/exploring-the-abandoned-machinery-and-vehicles-at-2025-10-06-13-42-12-utc.jpg',
+            link: 'https://equipmenthub.ltd/'
         }
     ];
 
