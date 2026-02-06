@@ -115,7 +115,7 @@ export default function Partnerships() {
     return (
         <LandingLayout
             title="Partnerships | Technical Alliances"
-            description="Technical Alliances & ROI. Partner with Jenkins Motorsports to test your products in the most extreme conditions. Join Morris Lubricants, Giti Tire, and more."
+            description="Technical Alliances & ROI. Partner with Jenkins Motorsports to test your products in the most extreme conditions. Join Morris Lubricants, LKQ, Equipment Hub, and more."
             image="/images/team_working_on_truck.jpg"
         >
             <div className="bg-black min-h-screen">

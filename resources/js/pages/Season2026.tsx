@@ -154,7 +154,7 @@ export default function Season2026() {
         {
             icon: Users,
             title: 'Partner ROI',
-            description: 'Delivering premium visibility for Morris Lubricants and Giti Tire across UK and international rounds.',
+            description: 'Delivering premium visibility for Morris Lubricants, LKQ, and Equipment Hub across UK and international rounds.',
         },
     ];
 

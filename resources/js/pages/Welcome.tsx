@@ -2,7 +2,7 @@ import LandingLayout from '@/layouts/LandingLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { ArrowRight, Activity, Cpu, Wind, gauge, Gauge } from 'lucide-react';
+import { ArrowRight, Activity, Cpu, Wind, Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Welcome() {
@@ -294,7 +294,7 @@ export default function Welcome() {
                                 Industrial <br /><span className="text-primary">ROI</span>
                             </h2>
                             <p className="text-lg font-medium text-zinc-600 mb-6">
-                                We are a rolling R&D lab for the world’s most demanding brands. From testing <span className="text-black font-bold">Morris Lubricants' Versimax</span> oil at extreme thermal peaks to pushing <span className="text-black font-bold">Giti GTR92</span> rubber to its lateral breaking point.
+                                We are a rolling R&D lab for the world’s most demanding brands. From testing <span className="text-black font-bold">Morris Lubricants' Versimax</span> oil at extreme thermal peaks to validating critical <span className="text-black font-bold">LKQ Euro Car Parts</span> components under race stresses.
                             </p>
                             <p className="text-lg text-zinc-600 mb-8 border-l-4 border-primary pl-4">
                                 We provide the data that keeps global logistics moving.
