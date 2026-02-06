@@ -31,7 +31,7 @@
         }
 
         body {
-            smooth-scroll: true;
+            scroll-behavior: smooth;
         }
     </style>
 
