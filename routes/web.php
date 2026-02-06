@@ -41,13 +41,21 @@ Route::post('/contact', [ContactController::class, 'storeContact'])->name('conta
 Route::post('/sponsorship', [ContactController::class, 'storeSponsorship'])->name('sponsorship.store');
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
-Route::get('/privacy', function () {
+Route::get('/privacy-policy', function () {
     return Inertia::render('PrivacyPolicy');
-})->name('privacy');
+})->name('privacy-policy');
 
-Route::get('/terms', function () {
+Route::get('/terms-of-service', function () {
     return Inertia::render('TermsOfService');
-})->name('terms');
+})->name('terms-of-service');
+
+Route::get('/cookie-policy', function () {
+    return Inertia::render('CookiePolicy');
+})->name('cookie-policy');
+
+Route::get('/gallery', function () {
+    return Inertia::render('Gallery');
+})->name('gallery');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/category/{category:slug}', [BlogController::class, 'showByCategory'])->name('blog.category');
