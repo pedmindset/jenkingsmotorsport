@@ -12,9 +12,11 @@ class BlogSeeder extends Seeder
     public function run(): void
     {
         // 1. Clean up
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         DB::table('blog_post_tag')->truncate();
         BlogPost::truncate();
         Tag::truncate();
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
 
         // 2. Create Tags
         $racingNews = Tag::create([
@@ -91,7 +93,8 @@ MARKDOWN;
                 'is_featured' => true,
                 'published_at' => now(),
                 'author_id' => 1,
-        ]);
+            ]
+        );
 
         $post->tags()->attach([$racingNews->id, $season2026->id]);
 
