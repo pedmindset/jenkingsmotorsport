@@ -8,11 +8,11 @@ interface SEOProps {
     type?: 'website' | 'article';
 }
 
-export default function SEO({
+export default function SEO({  
     title,
     description = "Jenkins Motorsports - The gold standard of British Truck Racing. 1,200 BHP titans, championship history, and the next generation of motorsport legacy.",
     image = "/storage/images/Jenkins_logo_with_text_color_white.png",
-    url = "https://jenkinsmotorsport.test",
+    url = "https://jenkinsmotorsport.test",  
     type = "website"
 }: SEOProps) {
     const siteName = "Jenkins Motorsports";
@@ -27,7 +27,7 @@ export default function SEO({
             <meta property="og:type" content={type} />
             <meta property="og:url" content={url} />
             <meta property="og:title" content={fullTitle} />
-            <meta property="og:description" content={description} />
+            <meta property="og:description" content={description} />  
             <meta property="og:image" content={image} />
 
             {/* Twitter */}
