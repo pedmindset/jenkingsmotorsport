@@ -54,7 +54,7 @@ export default function Season2026() {
                         {/* Image / CTA */}
                         <div className="relative">
                             <img
-                                src="/storage/images/dave_truck_on_racing_tracks_as_first.jpg"
+                                src="/images/dave_truck_on_racing_tracks_as_first.jpg"
                                 alt="David Jenkins Leading"
                                 className="w-full h-auto shadow-2xl border-4 border-white/10 transform rotate-1 hover:rotate-0 transition-transform duration-500"
                             />

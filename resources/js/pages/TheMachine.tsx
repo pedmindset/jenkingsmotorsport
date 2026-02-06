@@ -11,7 +11,7 @@ export default function TheMachine() {
             <div className="relative h-[60vh] overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: 'url("/storage/images/dave_truck_overhead_shot_on_tracks.jpg")' }}
+                    style={{ backgroundImage: 'url("/images/dave_truck_overhead_shot_on_tracks.jpg")' }}
                 >
                     <div className="absolute inset-0 bg-black/70" />
                 </div>
@@ -46,7 +46,7 @@ export default function TheMachine() {
                         </div>
                         <div className="relative h-full min-h-[400px]">
                             <img
-                                src="/storage/images/team_working_on_truck.jpg"
+                                src="/images/team_working_on_truck.jpg"
                                 alt="Engine Engineering"
                                 className="w-full h-full object-cover rounded-sm border border-white/20"
                             />

@@ -9,7 +9,7 @@ export default function SponsorshipTiers() {
         <section id="sponsors" className="py-24 bg-black relative">
             <div
                 className="absolute inset-0 bg-cover bg-center opacity-40"
-                style={{ backgroundImage: 'url("/storage/images/multiple_trucks_on_racing_tracks.jpg")' }}
+                style={{ backgroundImage: 'url("/images/multiple_trucks_on_racing_tracks.jpg")' }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
 

@@ -30,7 +30,7 @@ export default function TheBeast() {
                     >
                         <div className="absolute inset-0 bg-primary/20 mix-blend-overlay z-10" />
                         <img
-                            src="/storage/images/dave_truck_on_racing_tracks_as_first_2.jpg"
+                            src="/images/dave_truck_on_racing_tracks_as_first_2.jpg"
                             alt="The MAN TGX 12000"
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                         />
@@ -78,7 +78,7 @@ export default function TheBeast() {
                                             </li>
                                             <li className="bg-background/50 p-4 border-l-2 border-primary">
                                                 <span className="block text-xs uppercase text-muted-foreground">Acceleration</span>
-                                                <span className="font-heading text-xl font-bold text-white">0-100 > 911</span>
+                                                <span className="font-heading text-xl font-bold text-white">0-100 &gt; 911</span>
                                             </li>
                                             <li className="bg-background/50 p-4 border-l-2 border-primary">
                                                 <span className="block text-xs uppercase text-muted-foreground">Weight</span>

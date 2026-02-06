@@ -10,7 +10,7 @@ export default function Partnerships() {
             <div className="relative py-24 bg-black">
                 <div
                     className="absolute inset-0 bg-cover bg-center opacity-40"
-                    style={{ backgroundImage: 'url("/storage/images/multiple_trucks_on_racing_tracks_2.jpg")' }}
+                    style={{ backgroundImage: 'url("/images/multiple_trucks_on_racing_tracks_2.jpg")' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 

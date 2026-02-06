@@ -11,7 +11,7 @@ interface SEOProps {
 export default function SEO({
     title,
     description = "Jenkins Motorsports - The gold standard of British Truck Racing. 1,200 BHP titans, championship history, and the next generation of motorsport legacy.",
-    image = "/storage/images/Jenkins_logo_with_text_color_white.png",
+    image = "/images/Jenkins_logo_with_text_color_white.png",
     url = "https://jenkinsmotorsport.test",
     type = "website"
 }: SEOProps) {

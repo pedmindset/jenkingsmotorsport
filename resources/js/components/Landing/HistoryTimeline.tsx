@@ -18,7 +18,7 @@ const events: TimelineEvent[] = [
         description: "Tony Jenkins stands on the inaugural BTRA grid at Donington Park. An era defined by raw mechanical intuition and 'over-the-road' hardware.",
         icon: User,
         color: 'bg-primary',
-        image: '/storage/images/tony_jenkins_championship_truck.jpg'
+        image: '/images/tony_jenkins_championship_truck.jpg'
     },
     {
         year: '1997',
@@ -33,7 +33,7 @@ const events: TimelineEvent[] = [
         description: "David secures the Division 1 British Truck Racing Championship title. A validation of the family's decades-long commitment.",
         icon: Trophy,
         color: 'bg-destructive',
-        image: '/storage/images/dave_standing_and_lifting_trophy.jpg'
+        image: '/images/dave_standing_and_lifting_trophy.jpg'
     },
     {
         year: '2026',
@@ -41,7 +41,7 @@ const events: TimelineEvent[] = [
         description: "Back-to-back 3rd place finishes in '24 and '25. The team enters 2026 as the 'Gold Standard' for technical excellence.",
         icon: Flag,
         color: 'bg-primary',
-        image: '/storage/images/dave_truck_on_racing_tracks_as_first_2.jpg'
+        image: '/images/dave_truck_on_racing_tracks_as_first_2.jpg'
     }
 ];
 

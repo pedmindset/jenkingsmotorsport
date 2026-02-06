@@ -49,7 +49,7 @@ export default function LandingLayout({ title, description, children }: LandingL
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 group">
                         <img
-                            src="/storage/images/Jenkins_logo_with_text_color_white.png"
+                            src="/images/Jenkins_logo_with_text_color_white.png"
                             alt="Jenkins Motorsports"
                             className="h-16 w-auto object-contain transition-transform group-hover:scale-105"
                         />
@@ -116,7 +116,7 @@ export default function LandingLayout({ title, description, children }: LandingL
                         <div className="col-span-1 md:col-span-2">
                             <Link href="/" className="flex items-center gap-2 mb-6 group">
                                 <img
-                                    src="/storage/images/Jenkins_logo_with_text_color_white.png"
+                                    src="/images/Jenkins_logo_with_text_color_white.png"
                                     alt="Jenkins Motorsports"
                                     className="h-16 w-auto object-contain group-hover:opacity-80 transition-opacity"
                                 />

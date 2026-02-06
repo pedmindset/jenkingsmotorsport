@@ -36,7 +36,7 @@ export default function Legacy() {
                         >
                             <div className="absolute inset-0 bg-primary/20 transform skew-x-[-6deg] translate-x-4 translate-y-4" />
                             <img
-                                src="/storage/images/Tony Jenkins Truck that won the championship.jpg"
+                                src="/images/tony_jenkins_championship_truck.jpg"
                                 alt="Tony Jenkins 1984"
                                 className="relative z-10 w-full h-auto rounded-none border-2 border-white/10 grayscale hover:grayscale-0 transition-all duration-700"
                             />
@@ -82,7 +82,7 @@ export default function Legacy() {
                         >
                             <div className="absolute inset-0 bg-destructive/20 transform skew-x-[6deg] -translate-x-4 translate-y-4" />
                             <img
-                                src="/storage/images/dave_standing_and_lifting_trophy.jpg"
+                                src="/images/dave_standing_and_lifting_trophy.jpg"
                                 alt="David Jenkins Champion"
                                 className="relative z-10 w-full h-auto rounded-none border-2 border-white/10"
                             />

@@ -1,4 +1,4 @@
- import { Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Trophy, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ export default function Hero() {
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
                 style={{
-                    backgroundImage: 'url("/storage/images/dave_truck_on_racing_tracks_2.jpg")',
+                    backgroundImage: 'url("/images/dave_truck_on_racing_tracks_2.jpg")',
                     filter: 'grayscale(30%) contrast(120%)'
                 }}
             />
