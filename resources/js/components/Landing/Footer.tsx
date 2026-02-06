@@ -169,9 +169,19 @@ export default function Footer() {
 
                 {/* Bottom Bar */}
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-white/40 text-xs font-mono tracking-wide">
-                        &copy; {currentYear} JENKINS MOTORSPORTS. EST 1984.
-                    </p>
+                    <div className="flex flex-col items-center md:items-start gap-1">
+                        <p className="text-white/40 text-xs font-mono tracking-wide">
+                            &copy; {currentYear} JENKINS MOTORSPORTS. EST 1984.
+                        </p>
+                        <a
+                            href="https://pedsolution.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-white/20 hover:text-primary text-[10px] font-mono tracking-wider uppercase transition-colors"
+                        >
+                            Developed by PED Solution Studios
+                        </a>
+                    </div>
                     <div className="flex flex-wrap justify-center gap-8">
                         {['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Contact'].map((item) => (
                             <Link

@@ -67,6 +67,51 @@ export default function Partnerships() {
             },
             image: '/images/exploring-the-abandoned-machinery-and-vehicles-at-2025-10-06-13-42-12-utc.jpg',
             link: 'https://equipmenthub.ltd/'
+        },
+        {
+            name: 'Stan Robinson',
+            role: 'Logistics & Supply Chain Partner',
+            description: 'One of the UK\'s most respected family-owned hauliers. Our partnership with Stan Robinson ensures that the team\'s logistical operations run with the same precision as our race strategy.',
+            technicalFact: 'Network efficiency ensures 100% on-time delivery for race-critical infrastructure.',
+            icon: '/images/stan logo.png',
+            theme: {
+                glow: 'from-red-600 to-red-400/50',
+                iconBg: 'bg-transparent',
+                iconText: '',
+                bar: 'bg-red-600'
+            },
+            image: '/images/Stan-50-anni-wagons.jpg',
+            link: 'https://www.stanrobinson.com/'
+        },
+        {
+            name: 'Weaver Haulage',
+            role: 'Strategic Haulage Partner',
+            description: 'Experts in aggregates and heavy haulage. Weaver Haulage\'s support provides the foundation for our transport logistics, mirroring the rugged durability required in truck racing.',
+            technicalFact: 'Specialized fleet capabilities supporting heavy-duty team logistics.',
+            icon: '/images/weaver logo wh.png',
+            theme: {
+                glow: 'from-orange-600 to-orange-400/50',
+                iconBg: 'bg-transparent',
+                iconText: '',
+                bar: 'bg-orange-600'
+            },
+            image: '/images/weaver_tanker.jpg',
+            link: 'https://www.weaverhaulage.com/'
+        },
+        {
+            name: 'PED Solution Studios',
+            role: 'Digital & Technology Partner',
+            description: 'PED Solution Studios powers the digital presence of Jenkins Motorsports, delivering high-performance web solutions and fan engagement platforms. Just as we engineer for the track, PED engineers for the digital world.',
+            technicalFact: 'Precision-engineered digital architecture for maximum user engagement and speed.',
+            icon: '/images/ped-logo-transparent-white.png',
+            theme: {
+                glow: 'from-purple-600 to-purple-400/50',
+                iconBg: 'bg-transparent',
+                iconText: '',
+                bar: 'bg-purple-600'
+            },
+            image: '/images/ped_solution_studios_background.jpg',
+            link: 'https://pedsolution.com'
         }
     ];
 
