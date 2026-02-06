@@ -7,10 +7,10 @@ import { Head } from '@inertiajs/react';
 
 export default function Welcome() {
     return (
-        <LandingLayout title="Jenkins Motorsports | The Gold Standard">
-            <Head>
-                <meta name="description" content="Jenkins Motorsports - The #69 MAN TGX Racing Team. 40 years of British Truck Racing legacy." />
-            </Head>
+        <LandingLayout
+            title="Jenkins Motorsports | The Gold Standard"
+            description="Jenkins Motorsports - The #69 MAN TGX Racing Team. 40 years of British Truck Racing legacy. Experience the 1,200 BHP titans of the track."
+        >
 
             <Hero />
 

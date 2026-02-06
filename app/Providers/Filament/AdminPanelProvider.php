@@ -42,19 +42,41 @@ class AdminPanelProvider extends PanelProvider
                 fn() => new HtmlString('
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                    <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+                    <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
                     <style>
+                        /* Base Body Font */
+                        body, p, span, div, input, textarea, select {
+                            font-family: "Noto Sans", sans-serif !important;
+                        }
+
+                        /* All Headings and Labels using Saira */
                         .fi-header-heading, 
                         .fi-section-header-heading,
                         .fi-ta-header-heading,
+                        .fi-in-header-heading,
+                        .fi-modal-heading,
                         .fi-sidebar-group-label,
                         .fi-sidebar-item-label,
                         .fi-brand,
+                        .fi-wi-stats-overview-stat-label,
+                        .fi-wi-stats-overview-stat-value,
+                        .fi-fo-field-wrp-label,
+                        .fi-tabs-item-label,
+                        .fi-dropdown-list-item-label,
+                        .fi-ta-text-item-label,
                         h1, h2, h3, h4, h5, h6 { 
                             font-family: "Saira", sans-serif !important; 
                             text-transform: uppercase;
                             letter-spacing: 0.025em;
                             font-weight: 700 !important;
+                        }
+
+                        /* Exception for prose content in rich editors or info lists */
+                        .fi-prose, .fi-prose * {
+                            font-family: "Noto Sans", sans-serif !important;
+                            text-transform: none !important;
+                            letter-spacing: normal !important;
+                            font-weight: 400 !important;
                         }
                     </style>
                 '),

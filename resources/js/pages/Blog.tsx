@@ -20,9 +20,15 @@ interface Filter {
 }
 
 export default function Blog({ posts, filter }: { posts: Post[], filter?: Filter }) {
+    const seoDescription = filter
+        ? `Explore all Paddock Pass articles categorized under ${filter.name}. Get exclusive insights into Jenkins Motorsports.`
+        : "Direct from the paddock. Exclusive stories, technical updates, and championship race reports from Jenkins Motorsports.";
+
     return (
-        <LandingLayout title={filter ? `${filter.type}: ${filter.name} | Paddock Pass` : "Paddock Pass Blog"}>
-            <Head title={filter ? `${filter.type}: ${filter.name} | Paddock Pass` : "Paddock Pass Blog"} />
+        <LandingLayout
+            title={filter ? `${filter.name}` : "Paddock Pass"}
+            description={seoDescription}
+        >
 
             <div className="pt-32 pb-12 md:pt-48 md:pb-24 overflow-hidden bg-black">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]" />

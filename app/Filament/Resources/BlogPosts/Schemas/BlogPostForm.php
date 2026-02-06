@@ -43,6 +43,7 @@ class BlogPostForm
                                         RichEditor::make('content')
                                             ->label('Body Content')
                                             ->required()
+                                            ->extraAttributes(['style' => 'min-height: 500px;'])
                                             ->columnSpanFull(),
 
                                         Textarea::make('excerpt')
@@ -89,7 +90,7 @@ class BlogPostForm
                                             ->required(),
                                     ]),
 
-                                Section::make('Media & Status')
+                                Section::make('Media')
                                     ->schema([
                                         FileUpload::make('image_path')
                                             ->label('Featured Image')
@@ -101,7 +102,10 @@ class BlogPostForm
                                             ->placeholder('https://youtube.com/...')
                                             ->url()
                                             ->prefixIcon('heroicon-o-video-camera'),
+                                    ]),
 
+                                Section::make('Publishing')
+                                    ->schema([
                                         DateTimePicker::make('published_at')
                                             ->label('Publish Date')
                                             ->placeholder('Leave empty for draft'),

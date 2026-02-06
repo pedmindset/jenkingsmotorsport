@@ -1,15 +1,17 @@
-import { Head, Link } from '@inertiajs/react';
-import { Menu, Truck, X } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { Menu, X } from 'lucide-react';
 import { PropsWithChildren, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import SEO from '@/components/seo';
 
 interface LandingLayoutProps extends PropsWithChildren {
     title: string;
+    description?: string;
 }
 
-export default function LandingLayout({ title, children }: LandingLayoutProps) {
+export default function LandingLayout({ title, description, children }: LandingLayoutProps) {
     const [isScrolled, setIsScrolled] = useState(false);
 
     // Handle scroll effect for navbar
@@ -32,7 +34,7 @@ export default function LandingLayout({ title, children }: LandingLayoutProps) {
 
     return (
         <div className="min-h-screen bg-background font-sans text-foreground selection:bg-primary selection:text-white">
-            <Head title={title} />
+            <SEO title={title} description={description} />
 
             {/* Sticky Glass Navbar */}
             <nav

@@ -18,9 +18,14 @@ interface BlogPostProps {
 }
 
 export default function BlogPost({ post }: BlogPostProps) {
+    const seoDescription = post.content.replace(/<[^>]*>?/gm, '').substring(0, 160) + '...';
+    const seoImage = post.image_path ? `/storage/${post.image_path}` : undefined;
+
     return (
-        <LandingLayout title={post.title}>
-            <Head title={post.title} />
+        <LandingLayout
+            title={post.title}
+            description={seoDescription}
+        >
 
             <div className="relative pt-32 pb-12 md:pt-48 md:pb-20 bg-black">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]" />
@@ -32,7 +37,7 @@ export default function BlogPost({ post }: BlogPostProps) {
 
                     <div className="flex flex-wrap items-center gap-4 mb-4">
                         {post.category && (
-                            <Link href={`/ blog / category / ${post.category.slug} `} className="bg-primary text-white text-xs font-bold uppercase px-3 py-1 -skew-x-12 hover:bg-primary/80 transition-colors">
+                            <Link href={`/blog/category/${post.category.slug}`} className="bg-primary text-white text-xs font-bold uppercase px-3 py-1 -skew-x-12 hover:bg-primary/80 transition-colors">
                                 <span className="skew-x-12">{post.category.name}</span>
                             </Link>
                         )}
@@ -62,7 +67,7 @@ export default function BlogPost({ post }: BlogPostProps) {
                             </div>
                         ) : post.image_path ? (
                             <div className="mb-12 border-4 border-white/10 shadow-2xl -skew-x-2 overflow-hidden">
-                                <img src={`/ storage / ${post.image_path} `} alt={post.title} className="w-full h-full object-cover skew-x-2 scale-[1.02]" />
+                                <img src={`/storage/${post.image_path}`} alt={post.title} className="w-full h-full object-cover skew-x-2 scale-[1.02]" />
                             </div>
                         ) : null}
 
@@ -77,7 +82,7 @@ export default function BlogPost({ post }: BlogPostProps) {
                         {post.tags.length > 0 && (
                             <div className="mt-8 flex flex-wrap gap-2">
                                 {post.tags.map(tag => (
-                                    <Link key={tag.slug} href={`/ blog / tag / ${tag.slug} `} className="inline-flex items-center gap-1 bg-secondary/30 border border-white/10 px-3 py-1 text-sm text-muted-foreground hover:text-white hover:border-primary/50 transition-colors">
+                                    <Link key={tag.slug} href={`/blog/tag/${tag.slug}`} className="inline-flex items-center gap-1 bg-secondary/30 border border-white/10 px-3 py-1 text-sm text-muted-foreground hover:text-white hover:border-primary/50 transition-colors">
                                         <Tag className="h-3 w-3" /> {tag.name}
                                     </Link>
                                 ))}
