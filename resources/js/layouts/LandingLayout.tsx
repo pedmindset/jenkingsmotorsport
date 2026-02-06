@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import SEO from '@/components/seo';
+import Footer from '@/components/Landing/Footer';
 
 interface LandingLayoutProps extends PropsWithChildren {
     title: string;
@@ -29,6 +30,7 @@ export default function LandingLayout({ title, description, children }: LandingL
         { name: 'Legacy', href: '/legacy' },
         { name: 'Partners', href: '/partners' },
         { name: 'Season 2026', href: '/season' },
+        { name: 'Le Mans', href: '/le-mans' },
         { name: 'Paddock Pass', href: '/blog' },
     ];
 
@@ -110,51 +112,9 @@ export default function LandingLayout({ title, description, children }: LandingL
             </main>
 
             {/* Industrial Footer */}
-            <footer className="bg-secondary border-t border-border py-12 md:py-20 mt-0">
-                <div className="container mx-auto px-4 md:px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                        <div className="col-span-1 md:col-span-2">
-                            <Link href="/" className="flex items-center gap-2 mb-6 group">
-                                <img
-                                    src="/images/Jenkins_logo_with_text_color_white.png"
-                                    alt="Jenkins Motorsports"
-                                    className="h-16 w-auto object-contain group-hover:opacity-80 transition-opacity"
-                                />
-                            </Link>
-                            <p className="text-muted-foreground max-w-sm mb-6">
-                                The gold standard of British Truck Racing.
-                                From the 1984 pioneers to the 1,200 BHP titans of today.
-                            </p>
-                        </div>
+            {/* Industrial Footer */}
+            <Footer />
 
-                        <div>
-                            <h4 className="font-heading text-lg font-bold uppercase text-white mb-6">Team</h4>
-                            <ul className="space-y-4">
-                                <li><Link href="/legacy" className="text-muted-foreground hover:text-primary transition-colors">History</Link></li>
-                                <li><Link href="/the-machine" className="text-muted-foreground hover:text-primary transition-colors">The Machine</Link></li>
-                                <li><Link href="/season" className="text-muted-foreground hover:text-primary transition-colors">Season 2026</Link></li>
-                                <li><Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">Paddock Pass</Link></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 className="font-heading text-lg font-bold uppercase text-white mb-6">Connect</h4>
-                            <ul className="space-y-4">
-                                <li><Link href="/partners" className="text-muted-foreground hover:text-primary transition-colors">Sponsorship</Link></li>
-                                <li><Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact Us</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className="border-t border-border/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-                        <p>&copy; {new Date().getFullYear()} Jenkins Motorsports. All rights reserved.</p>
-                        <div className="flex gap-6">
-                            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-                            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-                        </div>
-                    </div>
-                </div>
-            </footer>
         </div>
     );
 }

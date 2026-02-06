@@ -10,6 +10,7 @@
 @theme {
     --font-sans: 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
     --font-heading: 'Saira', ui-sans-serif, system-ui, sans-serif;
+    --font-condensed: 'Saira Condensed', ui-sans-serif, system-ui, sans-serif;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);

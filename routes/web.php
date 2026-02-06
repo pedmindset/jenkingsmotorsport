@@ -28,9 +28,18 @@ Route::get('/season', function () {
     return Inertia::render('Season2026');
 })->name('season');
 
+Route::get('/le-mans', function () {
+    return Inertia::render('LeMans');
+})->name('le-mans');
+
+Route::get('/championship', function () {
+    return Inertia::render('Championship');
+})->name('championship');
+
 Route::get('/contact', [ContactController::class, 'show'])->name('contact');
 Route::post('/contact', [ContactController::class, 'storeContact'])->name('contact.store');
 Route::post('/sponsorship', [ContactController::class, 'storeSponsorship'])->name('sponsorship.store');
+Route::post('/newsletter/subscribe', [\App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 Route::get('/privacy', function () {
     return Inertia::render('PrivacyPolicy');

@@ -43,7 +43,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&family=Saira:ital,wght@0,300..900;1,300..900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&family=Saira:ital,wght@0,300..900;1,300..900&family=Saira+Condensed:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
     @viteReactRefresh
