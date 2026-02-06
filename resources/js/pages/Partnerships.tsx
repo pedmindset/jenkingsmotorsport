@@ -10,7 +10,7 @@ interface Partner {
     role: string;
     description: string;
     technicalFact: string;
-    icon: any; // Lucide icon
+    icon: string; // Image path for logo
     theme: {
         glow: string;
         iconBg: string;
@@ -28,11 +28,11 @@ export default function Partnerships() {
             role: 'The Backbone of the UK Aftermarket',
             description: 'As the UK’s leading distributor of automotive aftermarket parts, LKQ Euro Car Parts provides Jenkins Motorsports with a seamless, high-velocity supply chain. Our partnership focuses on testing high-performance components under the extreme thermal and mechanical loads of Division 1 racing, feeding critical reliability data back into the UK’s largest automotive network.',
             technicalFact: 'Supply chain velocity tested: <12h turnaround for critical race-spec components.',
-            icon: Settings,
+            icon: '/images/LKQ_white.webp',
             theme: {
                 glow: 'from-blue-600 to-blue-400/50',
-                iconBg: 'bg-blue-600/10',
-                iconText: 'text-blue-500',
+                iconBg: 'bg-transparent',
+                iconText: '',
                 bar: 'bg-blue-600'
             },
             image: '/images/team_working_on_truck.jpg',
@@ -43,11 +43,11 @@ export default function Partnerships() {
             role: 'The Chemical Edge',
             description: 'For over a decade, Jenkins Motorsports has been a primary development partner, testing high-performance oils like the Versimax range.',
             technicalFact: 'Tested to 140°C engine temperatures to ensure thermal stability under maximum load.',
-            icon: Gauge,
+            icon: '/images/morris_lubricant_logo.jpg',
             theme: {
                 glow: 'from-primary to-primary/50',
-                iconBg: 'bg-primary/10',
-                iconText: 'text-primary',
+                iconBg: 'bg-transparent',
+                iconText: '',
                 bar: 'bg-primary'
             },
             image: '/images/morris_lubricant.jpg',
@@ -58,11 +58,11 @@ export default function Partnerships() {
             role: 'Precision Procurement for Global Projects',
             description: 'Equipment Hub Ltd specializes in the procurement and supply of heavy equipment for international engineering and construction projects. This alliance bridges the gap between elite heavy-duty motorsport and the global machinery sector, utilizing the #69 MAN TGX as a flagship for industrial reliability and power.',
             technicalFact: 'Heavy equipment sourcing network spans 3 continents for project-critical machinery.',
-            icon: Truck,
+            icon: '/images/Equipment Hub Logo With Text Color White.png',
             theme: {
                 glow: 'from-blue-600 to-blue-400/50',
-                iconBg: 'bg-blue-600/10',
-                iconText: 'text-blue-500',
+                iconBg: 'bg-transparent',
+                iconText: '',
                 bar: 'bg-blue-600'
             },
             image: '/images/exploring-the-abandoned-machinery-and-vehicles-at-2025-10-06-13-42-12-utc.jpg',
@@ -220,11 +220,9 @@ export default function Partnerships() {
                                                 {/* Header */}
                                                 <div className="mb-6 flex items-start justify-between">
                                                     <div className={`p-3 ${partner.theme.iconBg} rounded-sm backdrop-blur-sm`}>
-                                                        <partner.icon className={`h-8 w-8 ${partner.theme.iconText}`} />
+                                                        <img src={partner.icon} alt={partner.name} className="h-8 w-auto object-contain" />
                                                     </div>
-                                                    <span className="font-heading font-black text-4xl text-white/10 group-hover:text-white/30 transition-colors pointer-events-none">
-                                                        0{index + 1}
-                                                    </span>
+                                                    {/* Number Removed */}
                                                 </div>
 
                                                 {/* Content */}
