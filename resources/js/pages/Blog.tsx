@@ -57,7 +57,13 @@ export default function Blog({ posts, filter }: { posts: Post[], filter?: Filter
                             <Link key={post.id} href={`/blog/${post.slug}`} className="group bg-secondary/20 border border-white/10 hover:border-primary/50 transition-all overflow-hidden flex flex-col h-full">
                                 <div className="aspect-video bg-black/50 relative overflow-hidden shrink-0">
                                     {post.image_path ? (
-                                        <img src={`/storage/${post.image_path}`} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                        <img
+                                            src={post.image_path.startsWith('/') || post.image_path.startsWith('http')
+                                                ? post.image_path
+                                                : `/storage/${post.image_path}`}
+                                            alt={post.title}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                                             <Construction className="h-12 w-12 opacity-20" />

@@ -2,6 +2,8 @@ import LandingLayout from '@/layouts/LandingLayout';
 import { Head, Link } from '@inertiajs/react';
 import { Calendar, ArrowLeft, Share2, Tag, PlayCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface BlogPostProps {
     post: {
@@ -19,7 +21,33 @@ interface BlogPostProps {
 
 export default function BlogPost({ post }: BlogPostProps) {
     const seoDescription = post.content.replace(/<[^>]*>?/gm, '').substring(0, 160) + '...';
-    const seoImage = post.image_path ? `/storage/${post.image_path}` : undefined;
+
+    const ImageRenderer = ({ src, alt }: { src?: string; alt?: string }) => {
+        if (!src) return null;
+
+        let className = "rounded-lg shadow-xl my-8";
+
+        // Logic to apply specific styles based on the image source or context
+        // This matches the "AI CODER INSTRUCTIONS" mapping
+        if (src.includes('team_working_on_truck')) {
+            className = "w-full md:w-2/5 md:float-right md:ml-8 mb-6 rounded-lg shadow-xl border border-white/10";
+        } else if (src.includes('multiple_trucks_on_racing_tracks_2')) {
+            className = "w-full rounded-lg shadow-2xl my-12 border-4 border-white/10";
+        } else {
+            // Default / Hero style
+            className = "w-full rounded-lg shadow-xl my-8 border border-white/10";
+        }
+
+        return (
+            <span className="block clear-both md:clear-none">
+                <img
+                    src={src}
+                    alt={alt}
+                    className={className}
+                />
+            </span>
+        );
+    };
 
     return (
         <LandingLayout
@@ -67,16 +95,27 @@ export default function BlogPost({ post }: BlogPostProps) {
                             </div>
                         ) : post.image_path ? (
                             <div className="mb-12 border-4 border-white/10 shadow-2xl -skew-x-2 overflow-hidden">
-                                <img src={`/storage/${post.image_path}`} alt={post.title} className="w-full h-full object-cover skew-x-2 scale-[1.02]" />
+                                <img src={post.image_path} alt={post.title} className="w-full h-full object-cover skew-x-2 scale-[1.02]" />
                             </div>
                         ) : null}
 
-                        <div className="prose prose-invert prose-lg max-w-none 
-                            prose-headings:font-heading prose-headings:italic prose-headings:uppercase prose-headings:text-white
-                            prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                            prose-strong:text-white prose-strong:font-bold
-                            text-muted-foreground">
-                            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                        <div className="text-muted-foreground prose prose-invert prose-lg max-w-none">
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    img: ImageRenderer,
+                                    h2: ({ node, ...props }) => <h2 className="font-heading text-3xl font-black uppercase italic text-white mt-12 mb-6" {...props} />,
+                                    h3: ({ node, ...props }) => <h3 className="font-heading text-xl font-bold uppercase text-primary mt-8 mb-4" {...props} />,
+                                    blockquote: ({ node, ...props }) => (
+                                        <blockquote className="border-l-4 border-primary pl-6 py-2 my-8 italic text-white text-xl bg-white/5 p-6 rounded-r-lg" {...props} />
+                                    ),
+                                    p: ({ node, ...props }) => <p className="mb-6 leading-relaxed" {...props} />,
+                                    a: ({ node, ...props }) => <a className="text-primary font-bold hover:underline" {...props} />,
+                                    strong: ({ node, ...props }) => <strong className="text-white font-bold" {...props} />,
+                                }}
+                            >
+                                {post.content}
+                            </ReactMarkdown>
                         </div>
 
                         {post.tags.length > 0 && (
@@ -102,7 +141,7 @@ export default function BlogPost({ post }: BlogPostProps) {
 
                     <div className="lg:col-span-4 space-y-8">
                         {/* Sidebar */}
-                        <div className="bg-secondary/20 border border-white/10 p-8 rounded-lg">
+                        <div className="bg-secondary/20 border border-white/10 p-8 rounded-lg sticky top-24">
                             <h3 className="font-heading text-xl font-bold uppercase italic text-white mb-4">Newsletter</h3>
                             <p className="text-muted-foreground text-sm mb-4">Get the latest Jenkins Motorsports news delivered straight to your inbox.</p>
                             <Button className="w-full bg-primary font-bold uppercase italic" asChild>

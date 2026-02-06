@@ -1,5 +1,5 @@
 import { Link, useForm } from '@inertiajs/react';
-import { Facebook, Instagram, Linkedin, Twitter, Youtube, ArrowRight, Mail, Loader2, CheckCircle2 } from 'lucide-react';
+import { Facebook, Instagram, ArrowRight, Mail, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormEventHandler } from 'react';
@@ -111,11 +111,8 @@ export default function Footer() {
                         </p>
 
                         <div className="flex items-center gap-3 pt-4">
-                            <SocialLink href="https://facebook.com" icon={Facebook} label="Facebook" />
-                            <SocialLink href="https://instagram.com" icon={Instagram} label="Instagram" />
-                            <SocialLink href="https://twitter.com" icon={Twitter} label="Twitter" />
-                            <SocialLink href="https://youtube.com" icon={Youtube} label="YouTube" />
-                            <SocialLink href="https://linkedin.com" icon={Linkedin} label="LinkedIn" />
+                            <SocialLink href="https://www.facebook.com/jenkins.trucksport/" icon={Facebook} label="Facebook" />
+                            <SocialLink href="https://www.instagram.com/jenkinsmotorsportdevelopment/" icon={Instagram} label="Instagram" />
                         </div>
                     </div>
 
