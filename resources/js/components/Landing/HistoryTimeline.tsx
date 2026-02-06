@@ -18,7 +18,7 @@ const events: TimelineEvent[] = [
         description: "Tony Jenkins stands on the inaugural BTRA grid at Donington Park. An era defined by raw mechanical intuition and 'over-the-road' hardware.",
         icon: User,
         color: 'bg-primary',
-        image: '/storage/images/Tony Jenkins Truck that won the championship.jpg'
+        image: '/storage/images/tony_jenkins_championship_truck.jpg'
     },
     {
         year: '1997',
@@ -40,7 +40,8 @@ const events: TimelineEvent[] = [
         title: 'The Benchmark',
         description: "Back-to-back 3rd place finishes in '24 and '25. The team enters 2026 as the 'Gold Standard' for technical excellence.",
         icon: Flag,
-        color: 'bg-primary'
+        color: 'bg-primary',
+        image: '/storage/images/dave_truck_on_racing_tracks_as_first_2.jpg'
     }
 ];
 
