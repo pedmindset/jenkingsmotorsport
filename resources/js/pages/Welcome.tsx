@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 
 export default function Welcome() {
     const targetDate = new Date('2026-04-04T09:00:00');
-    const displayDate = targetDate > new Date() ? targetDate : new Date('2027-04-01T09:00:00'); // Fallback to next year if passed
+    const displayDate = targetDate > new Date() ? targetDate : new Date('2027-04-01T09:00:00');
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
     function calculateTimeLeft() {
@@ -132,7 +132,10 @@ export default function Welcome() {
 
                         {/* LEFT: LEGACY */}
                         <div className="relative h-[600px] group overflow-hidden border-r-0 lg:border-r border-white/10">
-                            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors z-10" />
+                            {/* Improved Overlay for Legibility */}
+                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors z-10" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-black/10 z-10" />
+
                             <img
                                 src="/images/tony_jenkins_championship_truck.jpg"
                                 alt="Tony Jenkins 1984"
@@ -141,13 +144,16 @@ export default function Welcome() {
                             <div className="absolute bottom-12 left-8 md:left-12 z-20">
                                 <span className="block text-6xl font-heading font-black italic text-white/20 mb-2">1984</span>
                                 <h3 className="text-3xl font-heading font-bold uppercase text-white italic">The Origin</h3>
-                                <p className="text-muted-foreground mt-2 max-w-xs">Forged in raw iron. Tony Jenkins lays the foundation of a British motorsport legacy.</p>
+                                <p className="text-white/90 font-medium mt-2 max-w-xs drop-shadow-md">Forged in raw iron. Tony Jenkins lays the foundation of a British motorsport legacy.</p>
                             </div>
                         </div>
 
                         {/* RIGHT: MODERN */}
                         <div className="relative h-[600px] group overflow-hidden">
+                            {/* Improved Overlay for Legibility */}
                             <div className="absolute inset-0 bg-blue-900/40 group-hover:bg-blue-900/20 transition-colors z-10 mixed-blend-multiply" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/10 via-black/30 to-black/80 z-10" />
+
                             <img
                                 src="/images/dave_truck_on_racing_tracks_as_first_2.jpg"
                                 alt="David Jenkins 2026"
@@ -156,7 +162,7 @@ export default function Welcome() {
                             <div className="absolute top-12 right-8 md:right-12 z-20 text-right">
                                 <span className="block text-6xl font-heading font-black italic text-primary/40 mb-2">2026</span>
                                 <h3 className="text-3xl font-heading font-bold uppercase text-white italic">The Evolution</h3>
-                                <p className="text-white/80 mt-2 max-w-xs ml-auto">Refined by telemetry. David Jenkins pushes the #69 MAN TGX into the digital age.</p>
+                                <p className="text-white/90 font-medium mt-2 max-w-xs ml-auto drop-shadow-md">Refined by telemetry. David Jenkins pushes the #69 MAN TGX into the digital age.</p>
                             </div>
                         </div>
 
