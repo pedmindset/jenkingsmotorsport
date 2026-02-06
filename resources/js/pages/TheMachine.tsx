@@ -39,8 +39,8 @@ export default function TheMachine() {
                     >
                         {/* Rumble Animation */}
                         <motion.div
-                            className="w-full h-full bg-cover bg-center scale-110"
-                            style={{ backgroundImage: 'url("/images/dave_truck_on_racing_tracks_as_first_2.jpg")' }}
+                            className="w-full h-full bg-cover bg-center scale-120"
+                            style={{ backgroundImage: 'url("/images/dave_truck_on_racing_tracks_2.jpg")' }}
                             animate={isIdling ? {
                                 x: [-1, 1, -1],
                                 y: [-1, 1, -1],
