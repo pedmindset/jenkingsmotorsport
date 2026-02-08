@@ -55,20 +55,21 @@ export default function Contact() {
             "name": "Jenkins Motorsports",
             "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Unit 5, Silverstone Park",
-                "addressLocality": "Towcester",
-                "postalCode": "NN12 8FU",
+                "streetAddress": "Wood Farm, Stone Aston Estate",
+                "addressLocality": "Stafford",
+                "addressRegion": "Staffordshire",
+                "postalCode": "ST18 9SD",
                 "addressCountry": "UK"
             },
-            "telephone": "+44 1327 858 000",
-            "email": "enquiries@jenkinsmotorsport.com"
+            "telephone": "+44 7907 777177",
+            "email": "info@jenkinstrucksports.com"
         }
     };
 
     return (
         <LandingLayout
             title="Contact Us"
-            description="Contact Jenkins Motorsports. Headquarters in Towcester, UK. Get in touch for sponsorship inquiries, press accreditation, or general questions."
+            description="Get in touch with Jenkins Motorsports. Champions in British Truck Racing. Based in Stafford, Staffordshire."
             schema={contactSchema}
         >
             <Head title="Contact Us" />
@@ -93,56 +94,68 @@ export default function Contact() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                     {/* Contact Info */}
                     <div>
-                        <h2 className="font-heading text-3xl font-bold uppercase italic text-white mb-8">Headquarters</h2>
+                        <h2 className="font-heading text-3xl font-bold uppercase italic text-white mb-8 border-l-4 border-primary pl-6">Mission Control</h2>
 
                         <div className="space-y-8">
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-primary/10 rounded-sm">
+                            <div className="flex items-start gap-4 group">
+                                <div className="p-3 bg-primary/10 rounded-sm border border-primary/20 group-hover:bg-primary/20 transition-colors">
                                     <MapPin className="w-6 h-6 text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-white uppercase tracking-wider mb-1">Workshop & Office</h3>
-                                    <p className="text-muted-foreground">
-                                        Jenkins Motorsports<br />
-                                        Unit 5, Silverstone Park<br />
-                                        Towcester, NN12 8FU<br />
-                                        United Kingdom
+                                    <p className="text-muted-foreground leading-relaxed">
+                                        Wood Farm,<br />
+                                        Stone Aston Estate,<br />
+                                        Stafford,<br />
+                                        Staffordshire,<br />
+                                        ST18 9SD
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-primary/10 rounded-sm">
+                            <div className="flex items-start gap-4 group">
+                                <div className="p-3 bg-primary/10 rounded-sm border border-primary/20 group-hover:bg-primary/20 transition-colors">
                                     <Mail className="w-6 h-6 text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-white uppercase tracking-wider mb-1">Email Us</h3>
-                                    <p className="text-muted-foreground">
-                                        enquiries@jenkinsmotorsport.com<br />
-                                        press@jenkinsmotorsport.com
-                                    </p>
+                                    <div className="space-y-1">
+                                        <p className="text-muted-foreground flex items-center gap-2">
+                                            <span className="text-white/40 text-xs w-24">GENERAL:</span>
+                                            <a href="mailto:info@jenkinstrucksports.com" className="hover:text-primary transition-colors">info@jenkinstrucksports.com</a>
+                                        </p>
+                                        <p className="text-muted-foreground flex items-center gap-2">
+                                            <span className="text-white/40 text-xs w-24">SPONSORSHIP:</span>
+                                            <a href="mailto:partner@jenkinstrucksports.com" className="hover:text-primary transition-colors">partner@jenkinstrucksports.com</a>
+                                        </p>
+                                        <p className="text-muted-foreground flex items-center gap-2">
+                                            <span className="text-white/40 text-xs w-24">PRESS:</span>
+                                            <a href="mailto:press@jenkinstrucksports.com" className="hover:text-primary transition-colors">press@jenkinstrucksports.com</a>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-primary/10 rounded-sm">
+                            <div className="flex items-start gap-4 group">
+                                <div className="p-3 bg-primary/10 rounded-sm border border-primary/20 group-hover:bg-primary/20 transition-colors">
                                     <Phone className="w-6 h-6 text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-white uppercase tracking-wider mb-1">Call Us</h3>
                                     <p className="text-muted-foreground">
-                                        +44 (0) 1327 858 000
+                                        <a href="tel:+447907777177" className="hover:text-primary transition-colors font-mono">+44 7907 777177</a>
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="mt-12 p-8 bg-secondary/20 border border-white/10 rounded-lg">
+                        <div className="mt-12 p-8 bg-secondary/20 border border-white/10 rounded-lg backdrop-blur-sm relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
                             <h3 className="font-heading text-xl font-bold uppercase text-white mb-4">Press Inquiries</h3>
                             <p className="text-muted-foreground mb-4">
                                 For media accreditation, interview requests, and high-res asset access, please contact our press office directly.
                             </p>
-                            <Button variant="outline" className="w-full skew-x-[-12deg]">
+                            <Button variant="outline" className="w-full skew-x-[-12deg] border-white/10 hover:bg-white/5">
                                 <span className="skew-x-[12deg]">Access Press Area</span>
                             </Button>
                         </div>
