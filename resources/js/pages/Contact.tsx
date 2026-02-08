@@ -104,11 +104,9 @@ export default function Contact() {
                                 <div>
                                     <h3 className="font-bold text-white uppercase tracking-wider mb-1">Workshop & Office</h3>
                                     <p className="text-muted-foreground leading-relaxed">
-                                        Wood Farm,<br />
-                                        Stone Aston Estate,<br />
-                                        Stafford,<br />
-                                        Staffordshire,<br />
-                                        ST18 9SD
+                                        Wood Farm, Stone Aston Estate,<br />
+                                        Stafford, Staffordshire,<br />
+                                        ST18 9SD, United Kingdom
                                     </p>
                                 </div>
                             </div>
