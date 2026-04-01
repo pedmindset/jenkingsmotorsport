@@ -378,11 +378,12 @@ export default function Partnerships() {
                                 <Button
                                     size="lg"
                                     className="relative z-10 bg-white text-black font-heading font-black uppercase italic text-lg px-10 py-8 hover:bg-primary hover:text-white transition-all transform skew-x-[-12deg] group-hover:skew-x-[-6deg]"
+                                    asChild
                                 >
-                                    <div className="skew-x-[12deg] group-hover:skew-x-[6deg] flex items-center gap-3">
+                                    <a href="/docs/jenkins _sponsorship_0326.pdf" target="_blank" className="skew-x-[12deg] group-hover:skew-x-[6deg] flex items-center gap-3">
                                         <Download className="h-6 w-6" />
                                         Download Partnership Deck
-                                    </div>
+                                    </a>
                                 </Button>
                             </div>
                         </div>
