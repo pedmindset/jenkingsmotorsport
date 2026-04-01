@@ -11,6 +11,8 @@ export default function Footer() {
         email: '',
     });
 
+    const shopUrl = "shop." + import.meta.env.VITE_APP_DOMAIN;    
+
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post('/newsletter/subscribe', {
@@ -124,6 +126,7 @@ export default function Footer() {
                         <ul className="space-y-5">
                             <FooterLink href="/the-machine">The Machine</FooterLink>
                             <FooterLink href="/legacy">Legacy</FooterLink>
+                            <FooterLink href={shopUrl}>Shop</FooterLink>
                             <FooterLink href="/gallery">Gallery</FooterLink>
                         </ul>
                     </div>

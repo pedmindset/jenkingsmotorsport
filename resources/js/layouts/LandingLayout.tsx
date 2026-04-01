@@ -29,12 +29,15 @@ export default function LandingLayout({ title, description, image, url, type, sc
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    const shopUrl = "shop." + import.meta.env.VITE_APP_DOMAIN;
+
     const navLinks = [
         { name: 'The Beast', href: '/the-machine' },
         { name: 'Legacy', href: '/legacy' },
         { name: 'Partners', href: '/partners' },
         { name: 'Season 2026', href: '/season' },
         { name: 'Le Mans', href: '/le-mans' },
+        { name: 'Shop', href: shopUrl },
         { name: 'Paddock Pass', href: '/blog' },
     ];
 
