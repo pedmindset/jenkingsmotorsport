@@ -29,7 +29,7 @@ export default function LandingLayout({ title, description, image, url, type, sc
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const shopUrl = "https://shop." + import.meta.env.VITE_APP_DOMAIN;
+    const shopUrl = import.meta.env.VITE_SHOP_URL;
 
 
     const navLinks = [
