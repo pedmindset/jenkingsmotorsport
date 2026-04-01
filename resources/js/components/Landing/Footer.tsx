@@ -126,7 +126,7 @@ export default function Footer() {
                         <ul className="space-y-5">
                             <FooterLink href="/the-machine">The Machine</FooterLink>
                             <FooterLink href="/legacy">Legacy</FooterLink>
-                            <FooterLink href={shopUrl}>Shop</FooterLink>
+                            <FooterLink href={shopUrl} external={true}>Shop</FooterLink>
                             <FooterLink href="/gallery">Gallery</FooterLink>
                         </ul>
                     </div>
@@ -217,7 +217,23 @@ function SocialLink({ href, icon: Icon, label }: { href: string; icon: any; labe
     );
 }
 
-function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+function FooterLink({ href, children, external }: { href: string; children: React.ReactNode; external?: boolean }) {
+    if (external) {
+        return (
+            <li>
+                <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-white hover:pl-2 transition-all duration-300 block relative group"
+                >
+                    <span className="relative z-10">{children}</span>
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-2" />
+                </a>
+            </li>
+        );
+    }
+
     return (
         <li>
             <Link

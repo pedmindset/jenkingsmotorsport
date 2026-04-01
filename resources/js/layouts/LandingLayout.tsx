@@ -38,7 +38,7 @@ export default function LandingLayout({ title, description, image, url, type, sc
         { name: 'Partners', href: '/partners' },
         { name: 'Season 2026', href: '/season' },
         { name: 'Le Mans', href: '/le-mans' },
-        { name: 'Shop', href: shopUrl },
+        { name: 'Shop', href: shopUrl, external: true },
         { name: 'Paddock Pass', href: '/blog' },
     ];
 
@@ -74,16 +74,29 @@ export default function LandingLayout({ title, description, image, url, type, sc
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-4 lg:gap-8">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className="font-heading text-xs lg:text-sm font-bold uppercase tracking-widest text-white hover:text-primary transition-colors relative group"
-                            >
-                                {link.name}
-                                <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full -skew-x-12" />
-                            </Link>
-                        ))}
+                        {navLinks.map((link) => 
+                            link.external ? (
+                                <a
+                                    key={link.name}
+                                    href={link.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-heading text-xs lg:text-sm font-bold uppercase tracking-widest text-white hover:text-primary transition-colors relative group"
+                                >
+                                    {link.name}
+                                    <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full -skew-x-12" />
+                                </a>
+                            ) : (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    className="font-heading text-xs lg:text-sm font-bold uppercase tracking-widest text-white hover:text-primary transition-colors relative group"
+                                >
+                                    {link.name}
+                                    <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full -skew-x-12" />
+                                </Link>
+                            )
+                        )}
                         <Button
                             asChild
                             className="bg-destructive hover:bg-destructive/90 text-white font-heading font-bold uppercase italic tracking-wider -skew-x-12 rounded-none px-6"
@@ -103,15 +116,27 @@ export default function LandingLayout({ title, description, image, url, type, sc
                         </SheetTrigger>
                         <SheetContent side="right" className="w-[300px] border-l-border bg-background/95 backdrop-blur-xl">
                             <div className="flex flex-col gap-8 mt-10 pl-6">
-                                {navLinks.map((link) => (
-                                    <Link
-                                        key={link.name}
-                                        href={link.href}
-                                        className="font-heading text-2xl font-bold uppercase italic text-white hover:text-primary transition-colors"
-                                    >
-                                        {link.name}
-                                    </Link>
-                                ))}
+                                {navLinks.map((link) => 
+                                    link.external ? (
+                                        <a
+                                            key={link.name}
+                                            href={link.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="font-heading text-2xl font-bold uppercase italic text-white hover:text-primary transition-colors"
+                                        >
+                                            {link.name}
+                                        </a>
+                                    ) : (
+                                        <Link
+                                            key={link.name}
+                                            href={link.href}
+                                            className="font-heading text-2xl font-bold uppercase italic text-white hover:text-primary transition-colors"
+                                        >
+                                            {link.name}
+                                        </Link>
+                                    )
+                                )}
                                 <Button asChild className="w-full bg-primary font-heading font-bold uppercase italic rounded-none">
                                     <Link href="/contact">Join the Team</Link>
                                 </Button>
