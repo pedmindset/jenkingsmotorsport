@@ -11,7 +11,7 @@ export default function Footer() {
         email: '',
     });
 
-    const shopUrl = "shop." + import.meta.env.VITE_APP_DOMAIN;    
+    const shopUrl = "https://shop." + import.meta.env.VITE_APP_DOMAIN;    
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();

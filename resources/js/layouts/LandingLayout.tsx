@@ -29,7 +29,8 @@ export default function LandingLayout({ title, description, image, url, type, sc
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const shopUrl = "shop." + import.meta.env.VITE_APP_DOMAIN;
+    const shopUrl = "https://shop." + import.meta.env.VITE_APP_DOMAIN;
+
 
     const navLinks = [
         { name: 'The Beast', href: '/the-machine' },
