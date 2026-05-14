@@ -14,13 +14,13 @@ use App\Models\Season;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [HomeController::class, '__invoke'])->name('home');
+Route::get('/', HomeController::class)->name('home');
 
-Route::get('/legacy', [LegacyPageController::class, '__invoke'])->name('legacy');
+Route::get('/legacy', LegacyPageController::class)->name('legacy');
 
-Route::get('/the-machine', [MachinePageController::class, '__invoke'])->name('the-machine');
+Route::get('/the-machine', MachinePageController::class)->name('the-machine');
 
-Route::get('/partners', [PartnershipPageController::class, '__invoke'])->name('partners');
+Route::get('/partners', PartnershipPageController::class)->name('partners');
 
 Route::get('/season', function () {
     $season = Season::resolveForPublicRedirect();
@@ -28,11 +28,11 @@ Route::get('/season', function () {
     return redirect()->route('season.show', ['season' => $season->slug]);
 })->name('season');
 
-Route::get('/season/{season:slug}', [SeasonPageController::class, '__invoke'])->name('season.show');
+Route::get('/season/{season:slug}', SeasonPageController::class)->name('season.show');
 
-Route::get('/le-mans', [LeMansPageController::class, '__invoke'])->name('le-mans');
+Route::get('/le-mans', LeMansPageController::class)->name('le-mans');
 
-Route::get('/championship', [ChampionshipPageController::class, '__invoke'])->name('championship');
+Route::get('/championship', ChampionshipPageController::class)->name('championship');
 
 Route::get('/contact', [ContactController::class, 'show'])->name('contact');
 Route::post('/contact', [ContactController::class, 'storeContact'])->name('contact.store');
@@ -51,7 +51,7 @@ Route::get('/cookie-policy', function () {
     return Inertia::render('CookiePolicy');
 })->name('cookie-policy');
 
-Route::get('/gallery', [GalleryPageController::class, '__invoke'])->name('gallery');
+Route::get('/gallery', GalleryPageController::class)->name('gallery');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/category/{category:slug}', [BlogController::class, 'showByCategory'])->name('blog.category');

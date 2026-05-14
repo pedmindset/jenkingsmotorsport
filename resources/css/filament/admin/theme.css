@@ -1,0 +1,8 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+/**
+ * Tailwind utility scans: Filament’s default theme uses `source(none)`, so custom Blade
+ * under `resources/views/filament` and app Filament code would otherwise ship without matching CSS.
+ */
+@source '../../../../app/Filament';
+@source '../../../../resources/views/filament';
