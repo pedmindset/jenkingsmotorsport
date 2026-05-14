@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,7 +43,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'meta' => [
                 'title' => 'Jenkins Motorsports',
                 'description' => 'The gold standard of British Truck Racing. 1,200 BHP titans, championship history, and the next generation of motorsport legacy.',
@@ -50,6 +51,7 @@ class HandleInertiaRequests extends Middleware
                 'url' => $request->url(),
                 'type' => 'website',
             ],
+            'site' => static fn () => SiteSetting::allAsKeyedArray(),
         ];
     }
 }

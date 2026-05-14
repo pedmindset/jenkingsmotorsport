@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BlogPost;
 use App\Models\Category;
 use App\Models\Tag;
-use Illuminate\Http\Request;
+use App\Support\PublicMediaUrl;
 use Inertia\Inertia;
 
 class BlogController extends Controller
@@ -18,7 +18,7 @@ class BlogController extends Controller
                 ->where('published_at', '<=', now())
                 ->orderBy('published_at', 'desc')
                 ->get()
-                ->map(fn($post) => $this->transformPost($post)),
+                ->map(fn ($post) => $this->transformPost($post)),
             'meta' => [
                 'title' => 'Paddock Pass',
                 'description' => 'Direct from the paddock. Exclusive stories, technical updates, and championship race reports from Jenkins Motorsports.',
@@ -34,10 +34,10 @@ class BlogController extends Controller
                 ->where('published_at', '<=', now())
                 ->orderBy('published_at', 'desc')
                 ->get()
-                ->map(fn($post) => $this->transformPost($post)),
+                ->map(fn ($post) => $this->transformPost($post)),
             'filter' => ['type' => 'Category', 'name' => $category->name],
             'meta' => [
-                'title' => $category->name . ' | Paddock Pass',
+                'title' => $category->name.' | Paddock Pass',
                 'description' => "Explore all Paddock Pass articles categorized under {$category->name}.",
             ],
         ]);
@@ -51,10 +51,10 @@ class BlogController extends Controller
                 ->where('published_at', '<=', now())
                 ->orderBy('published_at', 'desc')
                 ->get()
-                ->map(fn($post) => $this->transformPost($post)),
+                ->map(fn ($post) => $this->transformPost($post)),
             'filter' => ['type' => 'Tag', 'name' => $tag->name],
             'meta' => [
-                'title' => $tag->name . ' | Paddock Pass',
+                'title' => $tag->name.' | Paddock Pass',
                 'description' => "Explore all Paddock Pass articles tagged with {$tag->name}.",
             ],
         ]);
@@ -65,6 +65,7 @@ class BlogController extends Controller
         $post = BlogPost::with(['category', 'tags'])
             ->where('slug', $slug)
             ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
             ->firstOrFail();
 
         return Inertia::render('BlogPost', [
@@ -72,22 +73,23 @@ class BlogController extends Controller
             'meta' => [
                 'title' => $post->title,
                 'description' => $post->excerpt,
-                'image' => $post->image_path,
+                'image' => PublicMediaUrl::absoluteUrl($post->image_path),
             ],
         ]);
     }
 
     private function transformPost($post, $full = false)
     {
+        $imagePath = PublicMediaUrl::browserPath($post->image_path);
         $data = [
             'id' => $post->id,
             'title' => $post->title,
             'slug' => $post->slug,
             'excerpt' => $post->excerpt,
-            'image_path' => $post->image_path,
+            'image_path' => $imagePath !== '' ? $imagePath : null,
             'published_at' => $post->published_at->format('M d, Y'),
             'category' => $post->category ? ['name' => $post->category->name, 'slug' => $post->category->slug] : null,
-            'tags' => $post->tags->map(fn($tag) => ['name' => $tag->name, 'slug' => $tag->slug]),
+            'tags' => $post->tags->map(fn ($tag) => ['name' => $tag->name, 'slug' => $tag->slug]),
         ];
 
         if ($full) {

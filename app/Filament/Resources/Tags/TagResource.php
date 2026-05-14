@@ -14,9 +14,16 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
+/**
+ * Filament CRUD for {@see Tag} taxonomy.
+ */
 class TagResource extends Resource
 {
     protected static ?string $model = Tag::class;
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Blog';
+
+    protected static ?int $navigationSort = 30;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHashtag;
 

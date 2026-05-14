@@ -13,10 +13,18 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Filament CRUD for {@see BlogPost} articles.
+ */
 class BlogPostResource extends Resource
 {
     protected static ?string $model = BlogPost::class;
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Blog';
+
+    protected static ?int $navigationSort = 10;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
@@ -46,5 +54,14 @@ class BlogPostResource extends Resource
             'create' => CreateBlogPost::route('/create'),
             'edit' => EditBlogPost::route('/{record}/edit'),
         ];
+    }
+
+    /**
+     * @return Builder<BlogPost>
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['category', 'author']);
     }
 }

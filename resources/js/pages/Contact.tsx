@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import LandingLayout from '@/layouts/LandingLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,13 +6,59 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MapPin, Mail, Phone } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import type { SharedData } from '@/types';
+import type { SiteContact } from '@/types/motorsport';
 
 export default function Contact() {
     const [formType, setFormType] = useState<'contact' | 'sponsorship'>('contact');
     const params = new URLSearchParams(window.location.search);
     const tierParam = params.get('tier');
 
-    // Sponsorship Form
+    const { site } = usePage<SharedData>().props;
+    const contact = (site.contact as SiteContact | undefined) ?? {};
+
+    const addressLines = contact.address_lines ?? [
+        'Wood Farm, Stone Aston Estate,',
+        'Stafford, Staffordshire,',
+        'ST18 9SD, United Kingdom',
+    ];
+
+    const emails = contact.emails ?? [
+        { label: 'GENERAL', address: 'info@jenkinstrucksports.com' },
+        { label: 'SPONSORSHIP', address: 'partner@jenkinstrucksports.com' },
+        { label: 'PRESS', address: 'press@jenkinstrucksports.com' },
+    ];
+
+    const phoneDisplay = contact.phone_display ?? '+44 7907 777177';
+    const phoneE164 = contact.phone_e164 ?? '+447907777177';
+
+    const pressBlurb =
+        contact.press_blurb ??
+        'For media accreditation, interview requests, and high-res asset access, please contact our press office directly.';
+
+    const contactSchema = useMemo(
+        () => ({
+            '@context': 'https://schema.org',
+            '@type': 'ContactPage',
+            name: 'Contact Jenkins Motorsports',
+            mainEntity: {
+                '@type': 'Organization',
+                name: 'Jenkins Motorsports',
+                address: {
+                    '@type': 'PostalAddress',
+                    streetAddress: addressLines[0]?.replace(/,$/, '') ?? '',
+                    addressLocality: 'Stafford',
+                    addressRegion: 'Staffordshire',
+                    postalCode: 'ST18 9SD',
+                    addressCountry: 'UK',
+                },
+                telephone: phoneDisplay,
+                email: emails[0]?.address ?? 'info@jenkinstrucksports.com',
+            },
+        }),
+        [addressLines, emails, phoneDisplay],
+    );
     const sponsorshipForm = useForm({
         name: '',
         email: '',
@@ -45,26 +90,6 @@ export default function Contact() {
     };
 
     const isSuccess = (formType === 'contact' ? contactForm.recentlySuccessful : sponsorshipForm.recentlySuccessful);
-
-    const contactSchema = {
-        "@context": "https://schema.org",
-        "@type": "ContactPage",
-        "name": "Contact Jenkins Motorsports",
-        "mainEntity": {
-            "@type": "Organization",
-            "name": "Jenkins Motorsports",
-            "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Wood Farm, Stone Aston Estate",
-                "addressLocality": "Stafford",
-                "addressRegion": "Staffordshire",
-                "postalCode": "ST18 9SD",
-                "addressCountry": "UK"
-            },
-            "telephone": "+44 7907 777177",
-            "email": "info@jenkinstrucksports.com"
-        }
-    };
 
     return (
         <LandingLayout
@@ -104,9 +129,12 @@ export default function Contact() {
                                 <div>
                                     <h3 className="font-bold text-white uppercase tracking-wider mb-1">Workshop & Office</h3>
                                     <p className="text-muted-foreground leading-relaxed">
-                                        Wood Farm, Stone Aston Estate,<br />
-                                        Stafford, Staffordshire,<br />
-                                        ST18 9SD, United Kingdom
+                                        {addressLines.map((line) => (
+                                            <span key={line}>
+                                                {line}
+                                                <br />
+                                            </span>
+                                        ))}
                                     </p>
                                 </div>
                             </div>
@@ -118,18 +146,14 @@ export default function Contact() {
                                 <div>
                                     <h3 className="font-bold text-white uppercase tracking-wider mb-1">Email Us</h3>
                                     <div className="space-y-1">
-                                        <p className="text-muted-foreground flex items-center gap-2">
-                                            <span className="text-white/40 text-xs w-24">GENERAL:</span>
-                                            <a href="mailto:info@jenkinstrucksports.com" className="hover:text-primary transition-colors">info@jenkinstrucksports.com</a>
-                                        </p>
-                                        <p className="text-muted-foreground flex items-center gap-2">
-                                            <span className="text-white/40 text-xs w-24">SPONSORSHIP:</span>
-                                            <a href="mailto:partner@jenkinstrucksports.com" className="hover:text-primary transition-colors">partner@jenkinstrucksports.com</a>
-                                        </p>
-                                        <p className="text-muted-foreground flex items-center gap-2">
-                                            <span className="text-white/40 text-xs w-24">PRESS:</span>
-                                            <a href="mailto:press@jenkinstrucksports.com" className="hover:text-primary transition-colors">press@jenkinstrucksports.com</a>
-                                        </p>
+                                        {emails.map((row) => (
+                                            <p key={row.address} className="text-muted-foreground flex items-center gap-2">
+                                                <span className="text-white/40 text-xs w-24">{row.label}:</span>
+                                                <a href={`mailto:${row.address}`} className="hover:text-primary transition-colors">
+                                                    {row.address}
+                                                </a>
+                                            </p>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -141,7 +165,9 @@ export default function Contact() {
                                 <div>
                                     <h3 className="font-bold text-white uppercase tracking-wider mb-1">Call Us</h3>
                                     <p className="text-muted-foreground">
-                                        <a href="tel:+447907777177" className="hover:text-primary transition-colors font-mono">+44 7907 777177</a>
+                                        <a href={`tel:${phoneE164}`} className="hover:text-primary transition-colors font-mono">
+                                            {phoneDisplay}
+                                        </a>
                                     </p>
                                 </div>
                             </div>
@@ -151,7 +177,7 @@ export default function Contact() {
                             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
                             <h3 className="font-heading text-xl font-bold uppercase text-white mb-4">Press Inquiries</h3>
                             <p className="text-muted-foreground mb-4">
-                                For media accreditation, interview requests, and high-res asset access, please contact our press office directly.
+                                {pressBlurb}
                             </p>
                             <Button variant="outline" className="w-full skew-x-[-12deg] border-white/10 hover:bg-white/5">
                                 <span className="skew-x-[12deg]">Access Press Area</span>

@@ -2,16 +2,15 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Dashboard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -20,16 +19,23 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+/**
+ * Registers Filament admin panel configuration (branding, middleware, discovery).
+ */
 class AdminPanelProvider extends PanelProvider
 {
+    /**
+     * Configure the Filament admin panel (path, auth, theme hooks, resources).
+     */
     public function panel(Panel $panel): Panel
     {
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
-            ->brandLogo(asset('storage/images/Jenkins_logo_with_text_color_white.png'))
+            ->brandLogo(asset('images/Jenkins_logo_with_text_color_white.png'))
             ->brandLogoHeight('3rem')
             ->colors([
                 'primary' => Color::Blue,
@@ -39,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->font('Noto Sans')
             ->renderHook(
                 'panels::head.done',
-                fn() => new HtmlString('
+                fn () => new HtmlString('
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -63,8 +69,7 @@ class AdminPanelProvider extends PanelProvider
                         .fi-fo-field-wrp-label,
                         .fi-tabs-item-label,
                         .fi-dropdown-list-item-label,
-                        .fi-ta-text-item-label,
-                        h1, h2, h3, h4, h5, h6 { 
+                        .fi-ta-text-item-label { 
                             font-family: "Saira", sans-serif !important; 
                             text-transform: uppercase;
                             letter-spacing: 0.025em;
@@ -86,10 +91,9 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 AccountWidget::class,
-                \App\Filament\Widgets\TeamWelcomeBanner::class,
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -1,161 +1,18 @@
 import LandingLayout from '@/layouts/LandingLayout';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Download, Check, Zap, Gauge, Disc, ArrowRight, Settings, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import type { PageProps } from '@inertiajs/core';
+import type { PartnershipTierCard, TechnicalPartnerCard } from '@/types/motorsport';
 
-// Define partner data structure
-interface Partner {
-    name: string;
-    role: string;
-    description: string;
-    technicalFact: string;
-    icon: string; // Image path for logo
-    theme: {
-        glow: string;
-        iconBg: string;
-        iconText: string;
-        bar: string;
-    };
-    image: string;
-    link: string;
-}
+type PartnershipsPageProps = PageProps & {
+    technicalPartners: TechnicalPartnerCard[];
+    tiers: PartnershipTierCard[];
+};
 
 export default function Partnerships() {
-    const technicalPartners: Partner[] = [
-        {
-            name: 'LKQ UK and Ireland',
-            role: 'A group of four market-leading businesses',
-            description: 'Driving excellence in parts, equipment and training across automotive, leisure and marine sectors. LKQ UK and Ireland provides Jenkins Motorsports with a seamless, high-velocity supply chain, testing high-performance components under the extreme thermal and mechanical loads of Division 1 racing.',
-            technicalFact: 'Supply chain velocity tested: <12h turnaround for critical race-spec components.',
-            icon: '/images/LKQ_white.webp',
-            theme: {
-                glow: 'from-blue-600 to-blue-400/50',
-                iconBg: 'bg-transparent',
-                iconText: '',
-                bar: 'bg-blue-600'
-            },
-            image: '/images/team_working_on_truck.jpg',
-            link: 'https://ukandireland.lkqeurope.com/'
-        },
-        {
-            name: 'Morris Lubricants',
-            role: 'The Chemical Edge',
-            description: 'For over a decade, Jenkins Motorsports has been a primary development partner, testing high-performance oils like the Versimax range.',
-            technicalFact: 'Tested to 140°C engine temperatures to ensure thermal stability under maximum load.',
-            icon: '/images/morris_lubricant_logo.jpg',
-            theme: {
-                glow: 'from-primary to-primary/50',
-                iconBg: 'bg-transparent',
-                iconText: '',
-                bar: 'bg-primary'
-            },
-            image: '/images/morris_lubricant.jpg',
-            link: 'https://www.morrislubricants.co.uk/'
-        },
-        {
-            name: 'Equipment Hub Ltd',
-            role: 'Precision Procurement for Global Projects',
-            description: 'Equipment Hub Ltd specializes in the procurement and supply of heavy equipment for international engineering and construction projects. This alliance bridges the gap between elite heavy-duty motorsport and the global machinery sector, utilizing the #69 MAN TGX as a flagship for industrial reliability and power.',
-            technicalFact: 'Heavy equipment sourcing network spans 3 continents for project-critical machinery.',
-            icon: '/images/Equipment Hub Logo With Text Color White.png',
-            theme: {
-                glow: 'from-blue-600 to-blue-400/50',
-                iconBg: 'bg-transparent',
-                iconText: '',
-                bar: 'bg-blue-600'
-            },
-            image: '/images/exploring-the-abandoned-machinery-and-vehicles-at-2025-10-06-13-42-12-utc.jpg',
-            link: 'https://equipmenthub.ltd/'
-        },
-        {
-            name: 'Stan Robinson',
-            role: 'Logistics & Supply Chain Partner',
-            description: 'One of the UK\'s most respected family-owned hauliers. Our partnership with Stan Robinson ensures that the team\'s logistical operations run with the same precision as our race strategy.',
-            technicalFact: 'Network efficiency ensures 100% on-time delivery for race-critical infrastructure.',
-            icon: '/images/stan logo.png',
-            theme: {
-                glow: 'from-red-600 to-red-400/50',
-                iconBg: 'bg-transparent',
-                iconText: '',
-                bar: 'bg-red-600'
-            },
-            image: '/images/Stan-50-anni-wagons.jpg',
-            link: 'https://www.stanrobinson.com/'
-        },
-        {
-            name: 'Weaver Haulage',
-            role: 'Strategic Haulage Partner',
-            description: 'Experts in aggregates and heavy haulage. Weaver Haulage\'s support provides the foundation for our transport logistics, mirroring the rugged durability required in truck racing.',
-            technicalFact: 'Specialized fleet capabilities supporting heavy-duty team logistics.',
-            icon: '/images/weaver logo wh.png',
-            theme: {
-                glow: 'from-orange-600 to-orange-400/50',
-                iconBg: 'bg-transparent',
-                iconText: '',
-                bar: 'bg-orange-600'
-            },
-            image: '/images/weaver_tanker.jpg',
-            link: 'https://www.weaverhaulage.com/'
-        },
-        {
-            name: 'PED Solution Studios',
-            role: 'Digital & Technology Partner',
-            description: 'PED Solution Studios powers the digital presence of Jenkins Motorsports, delivering high-performance web solutions and fan engagement platforms. Just as we engineer for the track, PED engineers for the digital world.',
-            technicalFact: 'Precision-engineered digital architecture for maximum user engagement and speed.',
-            icon: '/images/ped-logo-transparent-white.png',
-            theme: {
-                glow: 'from-purple-600 to-purple-400/50',
-                iconBg: 'bg-transparent',
-                iconText: '',
-                bar: 'bg-purple-600'
-            },
-            image: '/images/ped_solution_studios_background.jpg',
-            link: 'https://pedsolution.com'
-        }
-    ];
-
-    const tiers = [
-        {
-            name: 'Title Legacy Partner',
-            impact: 'Global Brand Alignment',
-            benefits: [
-                'Primary real estate on Blue/Black/Red livery',
-                'Featured in "Road to Le Mans" docu-series',
-                '20 VIP hospitality passes for "Convoy in the Park"',
-                'Title naming rights'
-            ],
-            cta: 'Inquire',
-            link: '/contact?tier=title',
-            highlight: true
-        },
-        {
-            name: 'Technical Innovation Partner',
-            impact: 'R&D & Product Authority',
-            benefits: [
-                'Collaborative case studies & "Tested by Jenkins" branding',
-                'Product display space in mobile workshop',
-                'Direct access to haulage network',
-                'Social media technical breakdowns'
-            ],
-            cta: 'Inquire',
-            link: '/contact?tier=technical',
-            highlight: false
-        },
-        {
-            name: 'Associate Partner',
-            impact: 'Strategic Placement',
-            benefits: [
-                'Logo integration on rear aero-fins & driver suit',
-                '5 VIP passes per season',
-                'Invitation to annual "Season Review" gala',
-                'Digital race report mentions'
-            ],
-            cta: 'Inquire',
-            link: '/contact?tier=associate',
-            highlight: false
-        }
-    ];
+    const { technicalPartners, tiers } = usePage<PartnershipsPageProps>().props;
 
     return (
         <LandingLayout
@@ -238,7 +95,7 @@ export default function Partnerships() {
                                 {technicalPartners.map((partner, index) => (
                                     <motion.a
                                         key={partner.name}
-                                        href={partner.link}
+                                        href={partner.link ?? '#'}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         initial={{ y: 30, opacity: 0 }}
@@ -256,7 +113,7 @@ export default function Partnerships() {
                                             {/* Background Image with Reveal Effect */}
                                             <div
                                                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-80"
-                                                style={{ backgroundImage: `url('${partner.image}')` }}
+                                                style={{ backgroundImage: partner.image ? `url('${partner.image}')` : undefined }}
                                             />
                                             {/* Heavy Gradient Overlay for Text Readability */}
                                             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-black/70 group-hover:via-black/80 transition-all duration-500" />
@@ -354,7 +211,7 @@ export default function Partnerships() {
                                             className={`w-full font-heading font-bold uppercase italic rounded-none h-12 ${tier.highlight ? 'bg-primary text-white hover:bg-white hover:text-black' : 'border-white/20 text-white hover:bg-white hover:text-black'}`}
                                             asChild
                                         >
-                                            <Link href={tier.link}>
+                                            <Link href={tier.link || '/contact'}>
                                                 {tier.cta} <ArrowRight className="ml-2 h-4 w-4" />
                                             </Link>
                                         </Button>

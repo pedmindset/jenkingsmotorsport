@@ -14,11 +14,18 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
+/**
+ * Filament CRUD for {@see NewsletterSubscription} records.
+ */
 class NewsletterSubscriptionResource extends Resource
 {
     protected static ?string $model = NewsletterSubscription::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\UnitEnum|null $navigationGroup = 'Inbox';
+
+    protected static ?int $navigationSort = 20;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 
     protected static ?string $recordTitleAttribute = 'email';
 

@@ -16,9 +16,16 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
+/**
+ * Filament CRUD for {@see SponsorshipEnquiry} inbox items.
+ */
 class SponsorshipEnquiryResource extends Resource
 {
     protected static ?string $model = SponsorshipEnquiry::class;
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Commercial';
+
+    protected static ?int $navigationSort = 30;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
 

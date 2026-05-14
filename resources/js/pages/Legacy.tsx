@@ -1,7 +1,11 @@
 import LandingLayout from '@/layouts/LandingLayout';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { BadgeCheck, Clock, Hammer, Trophy, TrendingUp, Flag } from 'lucide-react';
+import { BadgeCheck, Hammer, Trophy } from 'lucide-react';
+import { usePage } from '@inertiajs/react';
+import type { PageProps } from '@inertiajs/core';
+import { motorsportLucideIcon } from '@/lib/motorsport-icons';
+import type { LegacyContent, LegacyTimelineSection } from '@/types/motorsport';
 
 const TimelineSection = ({
     year,
@@ -66,7 +70,69 @@ const TimelineSection = ({
     );
 };
 
+function LegacySectionBody({ section }: { section: LegacyTimelineSection }) {
+    const paragraphs = section.paragraphs ?? [];
+    const listItems = section.listItems ?? [];
+
+    return (
+        <>
+            {paragraphs.map((p) => (
+                <p key={p}>
+                    {p}
+                </p>
+            ))}
+            {listItems.length > 0 && (
+                <ul className="space-y-4 mt-4 text-white/80 text-base">
+                    {listItems.map((item) => {
+                        const Icon = motorsportLucideIcon(item.icon);
+
+                        return (
+                            <li key={item.content} className="flex gap-4">
+                                <Icon className="h-6 w-6 shrink-0" />
+                                <span>{item.content}</span>
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
+            {section.callout && (
+                <div className="mt-6 bg-white/5 border border-white/10 p-6">
+                    <h4 className="flex items-center gap-2 font-bold uppercase text-white mb-2">
+                        <Hammer className="h-5 w-5" /> {section.callout.title}
+                    </h4>
+                    <p className="text-sm">
+                        {section.callout.body}
+                    </p>
+                </div>
+            )}
+            {section.badge && (
+                <div className="mt-6 inline-flex items-center gap-4 text-yellow-500 border border-yellow-500/50 bg-yellow-500/10 px-6 py-3 rounded-none uppercase font-bold tracking-widest">
+                    <Trophy className="h-6 w-6" />
+                    {section.badge}
+                </div>
+            )}
+            {section.stats && section.stats.length > 0 && (
+                <div className="mt-8 grid grid-cols-2 gap-4">
+                    {section.stats.map((s) => (
+                        <div key={s.label} className="bg-primary/20 border border-primary p-4 text-center">
+                            <span className="block text-4xl font-black text-white mb-1">{s.value}</span>
+                            <span className="text-xs uppercase text-primary tracking-widest">{s.label}</span>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </>
+    );
+}
+
+type LegacyPageProps = PageProps & {
+    content: LegacyContent;
+};
+
 export default function Legacy() {
+    const { content } = usePage<LegacyPageProps>().props;
+    const timelineSections = content?.timeline?.sections ?? [];
+    const factRows = content?.fact_check_rows?.rows ?? [];
     const legacySchema = {
         "@context": "https://schema.org",
         "@type": "Organization",
@@ -127,125 +193,19 @@ export default function Legacy() {
                     </motion.div>
                 </div>
 
-                {/* 1984: The Big Bang */}
-                <TimelineSection
-                    year="1984"
-                    title="The Big Bang"
-                    subTitle="Tony Jenkins & The Dawn of Heavy Metal"
-                    image="/images/tony_jenkins_championship_truck.jpg"
-                    filterClass="grayscale contrast-125"
-                    themeColor="white"
-                    content={
-                        <>
-                            <p>
-                                In September 1984, the British Truck Racing Association (BTRA) was born out of a dare at Donington Park.
-                                <strong className="text-white"> Tony Jenkins</strong> was one of the few who saw the future.
-                                Standing on that inaugural grid among 80,000 stunned fans, Tony helped turn a spectacle into a sport.
-                            </p>
-                            <ul className="space-y-4 mt-4 text-white/80 text-base">
-                                <li className="flex gap-4">
-                                    <Clock className="h-6 w-6 shrink-0" />
-                                    <span>
-                                        <strong>The Pioneer’s Rig:</strong> No racing gearboxes. No water-cooled brakes.
-                                        Just double-declutching and mechanical intuition to prevent 5-tonne machines from overshooting corners at 100mph.
-                                    </span>
-                                </li>
-                                <li className="flex gap-4">
-                                    <Flag className="h-6 w-6 shrink-0" />
-                                    <span>
-                                        <strong>The Apprentice:</strong> An eight-year-old David Jenkins watched from the pits, absorbing the smell of hot diesel.
-                                        This was the foundation of the mechanical molecularity that defines his engineering today.
-                                    </span>
-                                </li>
-                            </ul>
-                        </>
-                    }
-                />
-
-                {/* 1997-2010: The Forge */}
-                <TimelineSection
-                    year="1997"
-                    title="The Forge"
-                    subTitle="From Repairing to Engineering"
-                    image="/images/team_working_on_truck.jpg"
-                    filterClass="sepia-[.3] contrast-125 brightness-75"
-                    themeColor="white"
-                    align="right"
-                    content={
-                        <>
-                            <p>
-                                David Jenkins didn't just inherit a seat; he earned it by restoring his father’s old fleet.
-                                His 1997 debut at Donington ended in a frame-twisting wreck, but instead of quitting, he went back to the workshop in Stone.
-                            </p>
-                            <div className="mt-6 bg-white/5 border border-white/10 p-6">
-                                <h4 className="flex items-center gap-2 font-bold uppercase text-white mb-2">
-                                    <Hammer className="h-5 w-5" /> The Builder Era
-                                </h4>
-                                <p className="text-sm">
-                                    Over the next decade, the team transitioned from "repairing" to "developing."
-                                    Using his background as a professional technician, David built the team's first bespoke racing chassis,
-                                    moving away from modified road units to specialized Division 1 titans.
-                                </p>
-                            </div>
-                        </>
-                    }
-                />
-
-                {/* 2011: The Zenith */}
-                <TimelineSection
-                    year="2011"
-                    title="The Zenith"
-                    subTitle="Division 1 Champions"
-                    image="/images/dave_standing_and_lifting_trophy.jpg"
-                    filterClass=""
-                    themeColor="jenkins-gold"
-                    content={
-                        <>
-                            <p>
-                                The 2011 season remains etched in history. After 14 years of refining his craft, David Jenkins secured the
-                                <span className="text-yellow-500 font-bold"> Division 1 British Truck Racing Championship Title</span>.
-                            </p>
-                            <p>
-                                This victory validated forty years of the Jenkins name. It proved that a family-run, technician-led team
-                                could out-engineer factory-backed efforts through superior tactical driving and mechanical precision.
-                            </p>
-                            <div className="mt-6 inline-flex items-center gap-4 text-yellow-500 border border-yellow-500/50 bg-yellow-500/10 px-6 py-3 rounded-none uppercase font-bold tracking-widest">
-                                <Trophy className="h-6 w-6" />
-                                Champion Status Verified
-                            </div>
-                        </>
-                    }
-                />
-
-                {/* 2026: The Modern Pinnacle */}
-                <TimelineSection
-                    year="2026"
-                    title="The Pinnacle"
-                    subTitle="Chasing the Final Tenths"
-                    image="/images/dave_truck_on_racing_tracks_as_first.jpg"
-                    filterClass="saturate-150 contrast-110"
-                    themeColor="primary"
-                    align="right"
-                    content={
-                        <>
-                            <p>
-                                Today, the #69 MAN TGX is a digital ghost of Tony’s 1984 rig.
-                                With a <strong className="text-white">3rd Place overall finish in 2025</strong> and over 25 years of continuous competition data,
-                                we aren't just racing against the grid; we are racing against our own history.
-                            </p>
-                            <div className="mt-8 grid grid-cols-2 gap-4">
-                                <div className="bg-primary/20 border border-primary p-4 text-center">
-                                    <span className="block text-4xl font-black text-white mb-1">25+</span>
-                                    <span className="text-xs uppercase text-primary tracking-widest">Years on Grid</span>
-                                </div>
-                                <div className="bg-primary/20 border border-primary p-4 text-center">
-                                    <span className="block text-4xl font-black text-white mb-1">#3</span>
-                                    <span className="text-xs uppercase text-primary tracking-widest">2025 Rank</span>
-                                </div>
-                            </div>
-                        </>
-                    }
-                />
+                {timelineSections.map((section) => (
+                    <TimelineSection
+                        key={`${section.year}-${section.title}`}
+                        year={section.year}
+                        title={section.title}
+                        subTitle={section.subTitle}
+                        image={section.image}
+                        filterClass={section.filterClass}
+                        themeColor={section.themeColor}
+                        align={section.align === 'right' ? 'right' : 'left'}
+                        content={<LegacySectionBody section={section} />}
+                    />
+                ))}
 
                 {/* Verified Fact Check Table */}
                 <div className="bg-neutral-950 py-24 border-t border-white/10">
@@ -265,14 +225,8 @@ export default function Legacy() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/10">
-                                        {[
-                                            { info: 'BTRA Founding', status: 'Verified', detail: 'Founded in 1984; inaugural race at Donington Park.' },
-                                            { info: 'Tony Jenkins', status: 'Verified', detail: 'Pioneer driver on the 1984 grid; sparked David\'s career.' },
-                                            { info: 'David\'s Tenure', status: 'Verified', detail: 'Officially celebrated 25 consecutive years in BTRC.' },
-                                            { info: '2011 Title', status: 'Verified', detail: 'David Jenkins won the Division 1 Championship in 2011.' },
-                                            { info: '2025 Result', status: 'Verified', detail: '3rd Place Overall finish in the 2025 season.' },
-                                        ].map((row, i) => (
-                                            <tr key={i} className="hover:bg-white/5 transition-colors">
+                                        {factRows.map((row, i) => (
+                                            <tr key={row.info} className="hover:bg-white/5 transition-colors">
                                                 <td className="p-4 font-bold text-white">{row.info}</td>
                                                 <td className="p-4">
                                                     <span className="inline-flex items-center gap-1 text-green-500 text-xs font-bold uppercase tracking-wider">

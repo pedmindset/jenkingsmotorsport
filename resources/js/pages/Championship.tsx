@@ -1,56 +1,92 @@
 import LandingLayout from '@/layouts/LandingLayout';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Trophy, TrendingUp, Calendar, Zap, Volume2, Eye, Target, ChevronRight, Crown, Medal, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import type { PageProps } from '@inertiajs/core';
+import type { CareerResultRow, ContenderRow, StandingRow, StandingSeasonPayload } from '@/types/motorsport';
+import { standingsStatusLabel, standingsTableRowClassNames } from '@/lib/standings-visual';
 
-interface Driver {
-    rank: number;
-    name: string;
-    truck: string;
-    points: number;
-    isJenkins?: boolean;
+type ChampionshipPageProps = PageProps & {
+    standingSeasons: StandingSeasonPayload[];
+    careerResults: CareerResultRow[];
+    contenders2026: ContenderRow[];
+};
+
+function podiumCardClassNames(rank: number): string {
+    if (rank === 1) {
+        return 'order-1 border-yellow-300/70 bg-[linear-gradient(145deg,rgba(250,204,21,0.28),rgba(24,24,27,0.92)_38%,rgba(0,0,0,1))] shadow-[0_0_80px_rgba(250,204,21,0.2)] md:order-2 md:-mt-14';
+    }
+
+    if (rank === 2) {
+        return 'order-2 border-zinc-200/50 bg-[linear-gradient(145deg,rgba(228,228,231,0.2),rgba(24,24,27,0.9)_42%,rgba(0,0,0,1))] md:order-1';
+    }
+
+    return 'order-3 border-orange-700/60 bg-[linear-gradient(145deg,rgba(194,65,12,0.2),rgba(24,24,27,0.9)_42%,rgba(0,0,0,1))]';
 }
 
-const standings2025: Driver[] = [
-    { rank: 1, name: 'Ryan Smith', truck: 'Daimler Freightliner', points: 463 },
-    { rank: 2, name: 'Stuart Oliver', truck: 'Volvo VNL', points: 428 },
-    { rank: 3, name: 'David Jenkins', truck: 'MAN TGX', points: 413, isJenkins: true },
-    { rank: 4, name: 'John Bowler', truck: 'MAN TGX', points: 373 },
-    { rank: 5, name: 'Michael Oliver', truck: 'MAN TGS', points: 360 },
-    { rank: 6, name: 'Martin Gibson', truck: 'MAN TGS', points: 337 },
-];
+function podiumBadgeClassNames(rank: number): string {
+    if (rank === 1) {
+        return 'border-yellow-200 bg-yellow-300 text-black shadow-[0_0_24px_rgba(250,204,21,0.35)]';
+    }
 
-// 2026 is pre-season, so we show projected/entry list
-const standings2026: Driver[] = [
-    { rank: 1, name: 'Ryan Smith', truck: 'Daimler Freightliner', points: 0 },
-    { rank: 2, name: 'Stuart Oliver', truck: 'Volvo VNL', points: 0 },
-    { rank: 3, name: 'David Jenkins', truck: 'MAN TGX', points: 0, isJenkins: true },
-    { rank: 4, name: 'Michael Oliver', truck: 'MAN TGS', points: 0 },
-    { rank: 5, name: 'John Bowler', truck: 'MAN TGX', points: 0 },
-    { rank: 6, name: 'Shane Reid', truck: 'MAN TGS', points: 0 },
-];
+    if (rank === 2) {
+        return 'border-zinc-100 bg-zinc-200 text-black';
+    }
 
-const yearByYear = [
-    { year: '2025', result: '3rd Overall', division: 'BTRC Division 1', highlight: false },
-    { year: '2024', result: '3rd Overall', division: 'BTRC Division 1', highlight: false },
-    { year: '2023', result: '3rd Overall', division: 'BTRC Division 1', highlight: false },
-    { year: '2022', result: 'Runner-Up', division: 'BTRC Division 1', highlight: false },
-    { year: '2021', result: 'Runner-Up', division: 'BTRC Division 1', highlight: false },
-    { year: '2011', result: 'BRITISH CHAMPION', division: 'Division 1', highlight: true },
-];
+    return 'border-orange-500 bg-orange-700 text-white';
+}
 
-const contenders2026 = [
-    { name: 'Ryan Smith', title: 'Chasing a record 11th title', threat: 'extreme' },
-    { name: 'Stuart Oliver', title: 'The 10-time veteran rival', threat: 'high' },
-    { name: 'David Jenkins', title: 'The tactical "Apex Predator"', threat: 'jenkins' },
-    { name: 'Michael Oliver', title: 'The rising force in the Oliver dynasty', threat: 'high' },
-];
+function podiumPlinthClassNames(rank: number): string {
+    if (rank === 1) {
+        return 'h-20 border-yellow-300/50 bg-gradient-to-t from-yellow-500/35 to-yellow-300/10';
+    }
+
+    if (rank === 2) {
+        return 'h-14 border-zinc-100/30 bg-gradient-to-t from-zinc-300/20 to-white/5';
+    }
+
+    return 'h-10 border-orange-600/40 bg-gradient-to-t from-orange-700/25 to-orange-500/5';
+}
+
+function podiumOrdinal(rank: number): string {
+    if (rank === 1) {
+        return '1st';
+    }
+
+    if (rank === 2) {
+        return '2nd';
+    }
+
+    return '3rd';
+}
 
 export default function Championship() {
-    const [activeYear, setActiveYear] = useState<'2025' | '2026'>('2025');
-    const standings = activeYear === '2025' ? standings2025 : standings2026;
+    const { standingSeasons, careerResults, contenders2026 } = usePage<ChampionshipPageProps>().props;
+
+    const activeSeasonDefaultYear = useMemo(() => {
+        const flagged = standingSeasons.find((s) => s.isActive)?.year;
+        if (flagged) {
+            return flagged;
+        }
+
+        return standingSeasons[0]?.year ?? '2025';
+    }, [standingSeasons]);
+
+    const [activeYear, setActiveYear] = useState<string>(activeSeasonDefaultYear);
+
+    const activeSeason = standingSeasons.find((s) => s.year === activeYear);
+    const standings: StandingRow[] = activeSeason?.standings ?? [];
+    const isFinalStandings = activeSeason?.standingStatus === 'final';
+    const divisionLabel = activeSeason?.divisionLabel ?? '';
+    const podiumStandings = useMemo(() => {
+        const podiumOrder = [2, 1, 3];
+
+        return podiumOrder
+            .map((rank) => standings.find((driver) => driver.rank === rank))
+            .filter((driver): driver is StandingRow => driver !== undefined);
+    }, [standings]);
 
     return (
         <LandingLayout
@@ -99,32 +135,155 @@ export default function Championship() {
                                 <div>
                                     <span className="font-heading text-primary text-sm uppercase tracking-[0.3em] mb-2 block">01</span>
                                     <h2 className="font-heading text-4xl md:text-5xl font-black uppercase italic text-white">
-                                        {activeYear} {activeYear === '2025' ? 'Final' : 'Entry List'}: Division 1
+                                        {activeYear} {divisionLabel}: Division 1
                                     </h2>
                                 </div>
 
                                 {/* Rankings Switcher */}
                                 <div className="flex bg-secondary/30 border border-white/10 p-1">
-                                    <button
-                                        onClick={() => setActiveYear('2025')}
-                                        className={`px-6 py-3 font-heading font-bold uppercase text-sm transition-all ${activeYear === '2025'
-                                            ? 'bg-primary text-white'
-                                            : 'text-muted-foreground hover:text-white'
-                                            }`}
-                                    >
-                                        2025 Final
-                                    </button>
-                                    <button
-                                        onClick={() => setActiveYear('2026')}
-                                        className={`px-6 py-3 font-heading font-bold uppercase text-sm transition-all ${activeYear === '2026'
-                                            ? 'bg-primary text-white'
-                                            : 'text-muted-foreground hover:text-white'
-                                            }`}
-                                    >
-                                        2026 Season
-                                    </button>
+                                    {standingSeasons.map((season) => (
+                                        <button
+                                            key={season.year}
+                                            type="button"
+                                            onClick={() => setActiveYear(season.year)}
+                                            className={`px-6 py-3 font-heading font-bold uppercase text-sm transition-all ${activeYear === season.year
+                                                ? 'bg-primary text-white'
+                                                : 'text-muted-foreground hover:text-white'
+                                                }`}
+                                        >
+                                            {season.year} {season.divisionLabel}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
+
+                            {podiumStandings.length === 3 && (
+                                <motion.div
+                                    key={`${activeYear}-podium`}
+                                    initial={{ opacity: 0, y: 24 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.45, ease: 'easeOut' }}
+                                    className="relative mb-12 overflow-hidden border border-white/10 bg-black/70 p-4 md:p-6"
+                                >
+                                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(236,72,153,0.12),transparent_34%),radial-gradient(circle_at_80%_20%,rgba(250,204,21,0.16),transparent_28%)]" />
+                                    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
+
+                                    <div className="relative mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                                        <div>
+                                            <span className="font-heading text-xs font-bold uppercase tracking-[0.35em] text-primary">
+                                                Podium
+                                            </span>
+                                            <h3 className="font-heading mt-2 text-3xl font-black uppercase italic text-white md:text-4xl">
+                                                Top three pressure zone
+                                            </h3>
+                                        </div>
+                                        <p className="max-w-xl text-sm text-muted-foreground md:text-right">
+                                            Current Division 1 leaders, ranked by published championship points.
+                                        </p>
+                                    </div>
+
+                                    <div className="relative grid gap-4 md:grid-cols-3 md:items-end">
+                                        {podiumStandings.map((driver) => (
+                                            <motion.div
+                                                key={`${activeYear}-podium-${driver.rank}-${driver.name}`}
+                                                layout
+                                                whileHover={{ y: -6 }}
+                                                transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+                                                className={`group relative overflow-hidden border ${podiumCardClassNames(driver.rank)}`}
+                                            >
+                                                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.14),transparent_34%,transparent_64%,rgba(255,255,255,0.06))] opacity-70" />
+                                                <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/10 blur-2xl transition-transform duration-500 group-hover:scale-125" />
+
+                                                <div className="relative p-5">
+                                                    <div className="mb-5 flex items-start justify-between gap-4">
+                                                        <div>
+                                                            <span
+                                                                className={`font-heading inline-flex h-12 w-12 items-center justify-center rounded-full border text-xl font-black ${podiumBadgeClassNames(driver.rank)}`}
+                                                            >
+                                                                {driver.rank}
+                                                            </span>
+                                                            <p className="font-heading mt-3 text-xs font-bold uppercase tracking-[0.3em] text-white/55">
+                                                                {driver.rank === 1 ? 'Leader' : podiumOrdinal(driver.rank)}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            {driver.rank === 1 && <Crown className="ml-auto h-9 w-9 text-yellow-300" />}
+                                                            {driver.rank === 2 && <Medal className="ml-auto h-9 w-9 text-zinc-100" />}
+                                                            {driver.rank === 3 && <Award className="ml-auto h-9 w-9 text-orange-500" />}
+                                                            <span className="font-heading mt-2 block text-[10px] font-bold uppercase tracking-[0.28em] text-white/40">
+                                                                BTRC D1
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex items-end gap-4">
+                                                        <div
+                                                            className={`relative shrink-0 overflow-hidden rounded-full border bg-white/5 p-1 ${
+                                                                driver.rank === 1 ? 'border-yellow-300/50' : 'border-white/20'
+                                                            }`}
+                                                        >
+                                                            {driver.profileImage ? (
+                                                                <img
+                                                                    src={driver.profileImage}
+                                                                    alt={driver.name}
+                                                                    className={`rounded-full object-cover ${
+                                                                        driver.rank === 1 ? 'h-28 w-28' : 'h-24 w-24'
+                                                                    }`}
+                                                                />
+                                                            ) : (
+                                                                <div
+                                                                    className={`rounded-full bg-white/10 ${
+                                                                        driver.rank === 1 ? 'h-28 w-28' : 'h-24 w-24'
+                                                                    }`}
+                                                                />
+                                                            )}
+                                                            <span className="absolute inset-x-3 bottom-2 h-4 rounded-full bg-black/50 blur-md" />
+                                                        </div>
+
+                                                        <div className="min-w-0 pb-1">
+                                                            <h4 className="font-heading truncate text-2xl font-black uppercase italic leading-none text-white">
+                                                                {driver.name}
+                                                            </h4>
+                                                            <p className="mt-2 truncate text-sm text-muted-foreground">{driver.truck}</p>
+                                                            {driver.isJenkins && (
+                                                                <span className="mt-3 inline-flex bg-primary/50 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-white">
+                                                                    #{driver.racingNumber ?? '69'} Jenkins
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="mt-6 flex items-end justify-between border-t border-white/10 pt-4">
+                                                        <div>
+                                                            <span className="font-heading block text-[10px] font-bold uppercase tracking-[0.3em] text-white/45">
+                                                                Total
+                                                            </span>
+                                                            <span className="font-heading text-5xl font-black leading-none text-white">
+                                                                {driver.points}
+                                                            </span>
+                                                            <span className="ml-2 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
+                                                                pts
+                                                            </span>
+                                                        </div>
+                                                        <span className="font-heading text-7xl font-black leading-none text-white/5">
+                                                            {podiumOrdinal(driver.rank)}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className={`relative border-t ${podiumPlinthClassNames(driver.rank)}`}>
+                                                    <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.08)_0,rgba(255,255,255,0.08)_1px,transparent_1px,transparent_10px)]" />
+                                                    <div className="relative flex h-full items-center justify-center">
+                                                        <span className="font-heading text-4xl font-black text-white/20">
+                                                            {podiumOrdinal(driver.rank).toUpperCase()}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
 
                             {/* Standings Table */}
                             <div className="overflow-hidden border border-white/10">
@@ -135,7 +294,7 @@ export default function Championship() {
                                             <th className="p-4 font-heading uppercase text-xs text-muted-foreground border-b border-white/10">Driver</th>
                                             <th className="p-4 font-heading uppercase text-xs text-muted-foreground border-b border-white/10 hidden md:table-cell">Truck</th>
                                             <th className="p-4 font-heading uppercase text-xs text-muted-foreground border-b border-white/10 text-right">
-                                                {activeYear === '2025' ? 'Points' : 'Status'}
+                                                Points
                                             </th>
                                         </tr>
                                     </thead>
@@ -152,24 +311,20 @@ export default function Championship() {
                                                         delay: index * 0.08,
                                                         ease: "easeOut"
                                                     }}
-                                                    className={`relative transition-colors ${driver.isJenkins
-                                                        ? 'bg-primary/20 hover:bg-primary/30'
-                                                        : 'hover:bg-white/5'
-                                                        }`}
+                                                    className={standingsTableRowClassNames(driver.rank, Boolean(driver.isJenkins))}
                                                 >
-                                                    {/* Jenkins Glow Effect */}
-                                                    {driver.isJenkins && (
-                                                        <td className="absolute inset-0 pointer-events-none">
-                                                            <div className="absolute inset-0 bg-primary/10 animate-pulse" />
-                                                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
+                                                    {driver.isJenkins && driver.rank > 3 && (
+                                                        <td className="pointer-events-none absolute inset-0">
+                                                            <div className="absolute inset-0 animate-pulse bg-primary/10" />
+                                                            <div className="absolute top-0 bottom-0 left-0 w-1 bg-primary" />
                                                         </td>
                                                     )}
 
                                                     <td className="p-4 border-b border-white/10">
                                                         <div className="flex items-center justify-center">
                                                             {driver.rank === 1 && <Crown className="h-5 w-5 text-yellow-500" />}
-                                                            {driver.rank === 2 && <Medal className="h-5 w-5 text-neutral-400" />}
-                                                            {driver.rank === 3 && <Award className="h-5 w-5 text-amber-700" />}
+                                                            {driver.rank === 2 && <Medal className="h-5 w-5 text-neutral-300" />}
+                                                            {driver.rank === 3 && <Award className="h-5 w-5 text-amber-600" />}
                                                             {driver.rank > 3 && (
                                                                 <span className={`font-heading font-black text-lg ${driver.isJenkins ? 'text-primary' : 'text-white/50'}`}>
                                                                     {driver.rank}
@@ -178,24 +333,38 @@ export default function Championship() {
                                                         </div>
                                                     </td>
                                                     <td className={`p-4 border-b border-white/10 font-bold ${driver.isJenkins ? 'text-white' : 'text-white/90'}`}>
-                                                        {driver.name}
-                                                        {driver.isJenkins && (
-                                                            <span className="ml-2 text-xs bg-primary/50 text-white px-2 py-0.5 uppercase tracking-wider">#69</span>
-                                                        )}
+                                                        <span className="flex items-center gap-3">
+                                                            {driver.profileImage ? (
+                                                                <img
+                                                                    src={driver.profileImage}
+                                                                    alt={driver.name}
+                                                                    className="h-9 w-9 shrink-0 rounded-full border border-white/15 object-cover"
+                                                                />
+                                                            ) : null}
+                                                            <span>
+                                                                {driver.name}
+                                                                {driver.isJenkins && (
+                                                                    <span className="ml-2 text-xs bg-primary/50 text-white px-2 py-0.5 uppercase tracking-wider">#{driver.racingNumber ?? '69'}</span>
+                                                                )}
+                                                            </span>
+                                                        </span>
                                                     </td>
                                                     <td className={`p-4 border-b border-white/10 hidden md:table-cell ${driver.isJenkins ? 'text-white/80' : 'text-muted-foreground'}`}>
                                                         {driver.truck}
                                                     </td>
                                                     <td className="p-4 border-b border-white/10 text-right">
-                                                        {activeYear === '2025' ? (
-                                                            <span className={`font-heading font-black text-xl ${driver.isJenkins ? 'text-primary' : 'text-white'}`}>
+                                                        <div className="flex flex-col items-end gap-1 md:flex-row md:items-baseline md:justify-end md:gap-2">
+                                                            {!isFinalStandings ? (
+                                                                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500">
+                                                                    {standingsStatusLabel(activeSeason?.standingStatus ?? 'entered')}
+                                                                </span>
+                                                            ) : null}
+                                                            <span
+                                                                className={`font-heading text-xl font-black ${driver.isJenkins ? 'text-primary' : 'text-white'}`}
+                                                            >
                                                                 {driver.points}
                                                             </span>
-                                                        ) : (
-                                                            <span className="text-xs uppercase tracking-wider text-amber-500 font-bold">
-                                                                Entered
-                                                            </span>
-                                                        )}
+                                                        </div>
                                                     </td>
                                                 </motion.tr>
                                             ))}
@@ -205,7 +374,7 @@ export default function Championship() {
                             </div>
 
                             {/* 2025 Takeaway */}
-                            {activeYear === '2025' && (
+                            {activeYear === '2025' && isFinalStandings && (
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -244,9 +413,9 @@ export default function Championship() {
 
                             {/* Year-by-Year Grid */}
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                                {yearByYear.map((item, index) => (
+                                {careerResults.map((item, index) => (
                                     <motion.div
-                                        key={item.year}
+                                        key={String(item.year)}
                                         initial={{ opacity: 0, y: 20 }}
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true }}
@@ -318,6 +487,13 @@ export default function Championship() {
                                         <span className="font-heading font-black text-5xl text-white/10 absolute top-2 right-4">
                                             {index + 1}
                                         </span>
+                                        {contender.profileImage ? (
+                                            <img
+                                                src={contender.profileImage}
+                                                alt={contender.name}
+                                                className="mb-3 h-16 w-16 rounded-full border border-white/15 object-cover"
+                                            />
+                                        ) : null}
                                         <h3 className={`font-heading font-bold text-xl uppercase mb-2 ${contender.threat === 'jenkins' ? 'text-primary' : 'text-white'
                                             }`}>
                                             {contender.name}

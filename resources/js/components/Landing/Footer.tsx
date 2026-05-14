@@ -1,17 +1,32 @@
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { Facebook, Instagram, ArrowRight, Mail, Loader2, CheckCircle2 } from 'lucide-react';
+import { flattenNavLeaves } from '@/lib/nav-links';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useMemo } from 'react';
+import type { SharedData } from '@/types';
+import type { NavLinkEntry } from '@/types/motorsport';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
+    const { site } = usePage<SharedData>().props;
+
+    const social = site.social as { facebook?: string; instagram?: string } | undefined;
+
+    const shopUrl = useMemo(() => {
+        const raw = site.nav_links;
+        const leaves = Array.isArray(raw) ? flattenNavLeaves(raw as NavLinkEntry[]) : [];
+
+        const fromNav = leaves.find((l) => l.name === 'Shop')?.href;
+
+        return fromNav || import.meta.env.VITE_SHOP_URL || '/';
+    }, [site.nav_links]);
+
+    const developerCredit = site['footer.developer_credit'] as { label?: string; url?: string } | undefined;
 
     const { data, setData, post, processing, errors, recentlySuccessful, reset } = useForm({
         email: '',
     });
-
-    const shopUrl = import.meta.env.VITE_SHOP_URL;
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -113,8 +128,12 @@ export default function Footer() {
                         </p>
 
                         <div className="flex items-center gap-3 pt-4">
-                            <SocialLink href="https://www.facebook.com/jenkins.trucksport/" icon={Facebook} label="Facebook" />
-                            <SocialLink href="https://www.instagram.com/jenkinsmotorsportdevelopment/" icon={Instagram} label="Instagram" />
+                            {social?.facebook && (
+                                <SocialLink href={social.facebook} icon={Facebook} label="Facebook" />
+                            )}
+                            {social?.instagram && (
+                                <SocialLink href={social.instagram} icon={Instagram} label="Instagram" />
+                            )}
                         </div>
                     </div>
 
@@ -177,12 +196,12 @@ export default function Footer() {
                             &copy; {currentYear} JENKINS MOTORSPORTS. EST 1984.
                         </p>
                         <a
-                            href="https://pedsolution.com"
+                            href={developerCredit?.url ?? 'https://pedsolution.com'}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-white/20 hover:text-primary text-[10px] font-mono tracking-wider uppercase transition-colors"
                         >
-                            Developed by PED Solution Studios
+                            {developerCredit?.label ?? 'Developed by PED Solution Studios'}
                         </a>
                     </div>
                     <div className="flex flex-wrap justify-center gap-8">

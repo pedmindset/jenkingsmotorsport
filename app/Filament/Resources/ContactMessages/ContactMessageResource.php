@@ -16,9 +16,16 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
+/**
+ * Filament CRUD for {@see ContactMessage} inbox items.
+ */
 class ContactMessageResource extends Resource
 {
     protected static ?string $model = ContactMessage::class;
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Inbox';
+
+    protected static ?int $navigationSort = 10;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
 

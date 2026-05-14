@@ -1,40 +1,38 @@
 <?php
 
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ChampionshipPageController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\GalleryPageController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LegacyPageController;
+use App\Http\Controllers\LeMansPageController;
+use App\Http\Controllers\MachinePageController;
+use App\Http\Controllers\PartnershipPageController;
+use App\Http\Controllers\SeasonPageController;
+use App\Models\Season;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\BlogController;
-use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+Route::get('/', HomeController::class)->name('home');
 
-Route::get('/legacy', function () {
-    return Inertia::render('Legacy');
-})->name('legacy');
+Route::get('/legacy', LegacyPageController::class)->name('legacy');
 
-Route::get('/the-machine', function () {
-    return Inertia::render('TheMachine');
-})->name('the-machine');
+Route::get('/the-machine', MachinePageController::class)->name('the-machine');
 
-Route::get('/partners', function () {
-    return Inertia::render('Partnerships');
-})->name('partners');
+Route::get('/partners', PartnershipPageController::class)->name('partners');
 
 Route::get('/season', function () {
-    return Inertia::render('Season2026');
+    $season = Season::resolveForPublicRedirect();
+
+    return redirect()->route('season.show', ['season' => $season->slug]);
 })->name('season');
 
-Route::get('/le-mans', function () {
-    return Inertia::render('LeMans');
-})->name('le-mans');
+Route::get('/season/{season:slug}', SeasonPageController::class)->name('season.show');
 
-Route::get('/championship', function () {
-    return Inertia::render('Championship');
-})->name('championship');
+Route::get('/le-mans', LeMansPageController::class)->name('le-mans');
+
+Route::get('/championship', ChampionshipPageController::class)->name('championship');
 
 Route::get('/contact', [ContactController::class, 'show'])->name('contact');
 Route::post('/contact', [ContactController::class, 'storeContact'])->name('contact.store');
@@ -53,9 +51,7 @@ Route::get('/cookie-policy', function () {
     return Inertia::render('CookiePolicy');
 })->name('cookie-policy');
 
-Route::get('/gallery', function () {
-    return Inertia::render('Gallery');
-})->name('gallery');
+Route::get('/gallery', GalleryPageController::class)->name('gallery');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/category/{category:slug}', [BlogController::class, 'showByCategory'])->name('blog.category');
@@ -68,4 +64,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

@@ -5,10 +5,27 @@ import { useRef, useState, useEffect } from 'react';
 import { ArrowRight, Activity, Cpu, Wind, Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import type { PageProps } from '@inertiajs/core';
+import type { HeadlineStat, SeasonRaceRow } from '@/types/motorsport';
+
+type WelcomePageProps = PageProps & {
+    appUrl: string;
+    canRegister?: boolean;
+    homeRaces: SeasonRaceRow[];
+    nextRace: SeasonRaceRow | null;
+    heroVideoUrl: string;
+    countdownFallbackIso: string;
+    headlineStats: HeadlineStat[];
+};
+
 export default function Welcome() {
-    const { appUrl } = usePage<any>().props;
-    const targetDate = new Date('2026-04-04T09:00:00');
-    const displayDate = targetDate > new Date() ? targetDate : new Date('2027-04-01T09:00:00');
+    const { appUrl, nextRace, countdownFallbackIso, heroVideoUrl, headlineStats } = usePage<WelcomePageProps>().props;
+
+    const primaryStat = headlineStats[0] ?? { value: '1,160', unit: 'BHP', label: 'Engine Output' };
+    const secondaryStat = headlineStats[1] ?? { value: '5,500', unit: 'Nm', label: 'Torque Peak' };
+
+    const targetDate = nextRace ? new Date(nextRace.startsAt) : new Date(countdownFallbackIso);
+    const displayDate = targetDate > new Date() ? targetDate : new Date(countdownFallbackIso);
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
     function calculateTimeLeft() {
@@ -29,7 +46,7 @@ export default function Welcome() {
             setTimeLeft(calculateTimeLeft());
         }, 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [displayDate]);
 
     const timelineRef = useRef(null);
     const isInView = useInView(timelineRef, { once: true, margin: "-100px" });
@@ -65,7 +82,7 @@ export default function Welcome() {
                 <div className="absolute top-0 inset-0 z-0 select-none pointer-events-none">
                     <iframe
                         className="absolute top-1/2 left-1/2 w-[500%] h-[500%] -translate-x-1/2 -translate-y-1/2 opacity-60 object-cover landscape:w-[175%] landscape:h-[175%]"
-                        src="https://www.youtube.com/embed/-jiZDvSDv8Y?autoplay=1&mute=1&loop=1&playlist=-jiZDvSDv8Y&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3"
+                        src={heroVideoUrl}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         title="Background Video"
                     />
@@ -86,7 +103,7 @@ export default function Welcome() {
                         <div className="flex flex-col">
                             <span className="text-destructive font-bold text-xs uppercase tracking-widest leading-none">Live Countdown</span>
                             <span className="text-white font-mono text-xs leading-none mt-1">
-                                BRANDS HATCH: {timeLeft.days}D {timeLeft.hours}H {timeLeft.minutes}M
+                                {(nextRace?.title ?? 'NEXT ROUND').toUpperCase()}: {timeLeft.days}D {timeLeft.hours}H {timeLeft.minutes}M
                             </span>
                         </div>
                     </div>
@@ -110,12 +127,12 @@ export default function Welcome() {
                             className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-12 border-l-4 border-primary pl-6"
                         >
                             <div className="space-y-1">
-                                <span className="block text-4xl font-heading font-black text-white italic">1,160 <span className="text-primary text-xl not-italic">BHP</span></span>
-                                <span className="block text-xs uppercase tracking-widest text-muted-foreground">Engine Output</span>
+                                <span className="block text-4xl font-heading font-black text-white italic">{primaryStat.value} <span className="text-primary text-xl not-italic">{primaryStat.unit}</span></span>
+                                <span className="block text-xs uppercase tracking-widest text-muted-foreground">{primaryStat.label}</span>
                             </div>
                             <div className="space-y-1">
-                                <span className="block text-4xl font-heading font-black text-white italic">5,500 <span className="text-primary text-xl not-italic">Nm</span></span>
-                                <span className="block text-xs uppercase tracking-widest text-muted-foreground">Torque Peak</span>
+                                <span className="block text-4xl font-heading font-black text-white italic">{secondaryStat.value} <span className="text-primary text-xl not-italic">{secondaryStat.unit}</span></span>
+                                <span className="block text-xs uppercase tracking-widest text-muted-foreground">{secondaryStat.label}</span>
                             </div>
                             <p className="text-lg md:text-xl text-white/80 max-w-lg font-medium">
                                 40 Years of DNA. Experience the visceral intensity of the #69 MAN TGX as we hunt the 2026 Title.

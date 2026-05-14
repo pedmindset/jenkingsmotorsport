@@ -5,31 +5,22 @@ namespace Database\Seeders;
 use App\Models\BlogPost;
 use App\Models\Tag;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class BlogSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Clean up
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
-        DB::table('blog_post_tag')->truncate();
-        BlogPost::truncate();
-        Tag::truncate();
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        $racingNews = Tag::query()->updateOrCreate(
+            ['slug' => 'racing-news'],
+            ['name' => 'Racing News'],
+        );
 
-        // 2. Create Tags
-        $racingNews = Tag::create([
-            'name' => 'Racing News',
-            'slug' => 'racing-news'
-        ]);
+        $season2026 = Tag::query()->updateOrCreate(
+            ['slug' => 'season-2026'],
+            ['name' => 'Season 2026'],
+        );
 
-        $season2026 = Tag::create([
-            'name' => 'Season 2026',
-            'slug' => 'season-2026'
-        ]);
-
-        // 3. Create Blog Post with DIRECT public image paths (no storage copy)
+        // Blog post with DIRECT public image paths (no storage copy)
         $content = <<<'MARKDOWN'
 The air in the workshop is heavy. It smells of cold diesel, fresh Morris Lubricants, and anticipation. The winter silence is about to shatter.
 
@@ -81,7 +72,7 @@ The silence is over. It’s time to make some noise.
 [Instagram](https://www.instagram.com/jenkinsmotorsportdevelopment/?__d=1) | [Facebook](https://web.facebook.com/jenkins.trucksport/)
 MARKDOWN;
 
-        $post = BlogPost::updateOrCreate(
+        $post = BlogPost::query()->updateOrCreate(
             [
                 'slug' => 'the-reset-why-2026-is-the-year-of-the-predator',
             ],
@@ -93,10 +84,10 @@ MARKDOWN;
                 'is_featured' => true,
                 'published_at' => now(),
                 'author_id' => 1,
-            ]
+            ],
         );
 
-        $post->tags()->attach([$racingNews->id, $season2026->id]);
+        $post->tags()->sync([$racingNews->id, $season2026->id]);
 
         $this->command->info('Blog post seeded successfully!');
     }

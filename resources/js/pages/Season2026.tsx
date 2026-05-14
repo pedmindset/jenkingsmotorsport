@@ -1,108 +1,61 @@
 import LandingLayout from '@/layouts/LandingLayout';
-import { Link } from '@inertiajs/react';
+import { StandingsTableBlock } from '@/components/motorsport/StandingsTableBlock';
+import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import {
-    Calendar, MapPin, Flag, Trophy, Clock, Target, Zap, Users,
-    ChevronRight, Timer, Globe, Flame, Award
+    Calendar, MapPin, Flag, Clock, Target, Users,
+    ChevronRight, ChevronDown, Timer, Globe, Flame, Award
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import type { PageProps } from '@inertiajs/core';
+import { motorsportLucideIcon } from '@/lib/motorsport-icons';
+import { cn } from '@/lib/utils';
+import type { RoundResultsRoundPayload, SeasonPageSeason, SeasonRaceRow, SeasonStandingTablePayload } from '@/types/motorsport';
 
-interface Race {
-    event: string;
-    title: string;
-    date: string;
+type Season2026Props = PageProps & {
+    season: SeasonPageSeason;
+    races: SeasonRaceRow[];
+    standingTable: SeasonStandingTablePayload;
+    roundResults: RoundResultsRoundPayload[];
+    meta?: {
+        title?: string;
+        description?: string;
+        image?: string;
+    };
+};
+
+interface Race extends SeasonRaceRow {
     dateObj: Date;
-    venue: string;
-    country: string;
-    rounds: string;
-    description: string;
-    highlight?: string;
-    isInternational?: boolean;
-    link?: string;
 }
 
 export default function Season2026() {
-    const races: Race[] = [
-        {
-            event: '01',
-            title: 'The Opener',
-            date: 'April 4–5',
-            dateObj: new Date('2026-04-04T09:00:00'),
-            venue: 'Brands Hatch (Indy)',
-            country: 'UK',
-            rounds: '1 – 5',
-            description: 'The high-contact season opener on Easter weekend. Five races in 48 hours — a brutal test of physical endurance and mechanical reliability.',
-            highlight: 'Easter Awakening'
-        },
-        {
-            event: '02',
-            title: 'High Speed',
-            date: 'May 16–17',
-            dateObj: new Date('2026-05-16T09:00:00'),
-            venue: 'Thruxton',
-            country: 'UK',
-            rounds: '6 – 10',
-            description: 'Britain\'s fastest circuit. The 5.5-tonne machines reach terminal velocity on the long straights, demanding phenomenal braking.',
-        },
-        {
-            event: '03',
-            title: 'The Welsh Duel',
-            date: 'June 20–21',
-            dateObj: new Date('2026-06-20T09:00:00'),
-            venue: 'Pembrey',
-            country: 'Wales',
-            rounds: '11 – 15',
-            description: 'A technical circuit demanding precision and courage. The Welsh air carries the roar of 1,160 BHP through the valleys.',
-        },
-        {
-            event: '04',
-            title: 'Summer Heat',
-            date: 'July 11–12',
-            dateObj: new Date('2026-07-11T09:00:00'),
-            venue: 'Snetterton 300',
-            country: 'UK',
-            rounds: '16 – 20',
-            description: 'A test of pure horsepower on the legendary Bentley Straight. Peak summer temperatures push cooling systems to their limits.',
-        },
-        {
-            event: '05',
-            title: 'Flagship Weekend',
-            date: 'August 8–9',
-            dateObj: new Date('2026-08-08T09:00:00'),
-            venue: 'Donington Park',
-            country: 'UK',
-            rounds: '21 – 25',
-            description: 'Convoy in the Park. 100,000+ spectators. The crown jewel of British trucking — maximum pressure, maximum visibility.',
-            highlight: 'Convoy in the Park'
-        },
-        {
-            event: '06',
-            title: 'The International',
-            date: 'Sept 26–27',
-            dateObj: new Date('2026-09-26T09:00:00'),
-            venue: 'Le Mans, France',
-            country: 'France',
-            rounds: '26 – 29',
-            description: 'The championship heads to the iconic Circuit Bugatti. Racing in front of a massive European crowd, proving the Jenkins pedigree translates across borders.',
-            highlight: 'Road to France',
-            isInternational: true,
-            link: '/le-mans'
-        },
-        {
-            event: '07',
-            title: 'The Grand Finale',
-            date: 'Oct 31 – Nov 1',
-            dateObj: new Date('2026-10-31T09:00:00'),
-            venue: 'Brands Hatch (Indy)',
-            country: 'UK',
-            rounds: '30 – 34',
-            description: 'Trucks & Fireworks. Halloween weekend. Where legends are made and championships are decided under the autumn lights.',
-            highlight: 'Title Decider'
-        },
-    ];
+    const { season, races: raceRows, standingTable, roundResults, meta: pageMeta } = usePage<Season2026Props>().props;
 
-    // Countdown logic
+    const races: Race[] = useMemo(
+        () => raceRows.map((r) => ({ ...r, dateObj: new Date(r.startsAt) })),
+        [raceRows],
+    );
+
+    const roundsWithData = useMemo(
+        () => roundResults.filter((r) => r.results.length > 0),
+        [roundResults],
+    );
+
+    const [openRoundEvent, setOpenRoundEvent] = useState<string | null>(
+        () => roundResults.find((r) => r.results.length > 0)?.event ?? null,
+    );
+
+    const seasonObjectives = useMemo(() => {
+        const raw = season.objectives ?? [];
+        return raw.map((o) => ({
+            icon: motorsportLucideIcon(o.icon),
+            title: o.title,
+            description: o.description,
+        }));
+    }, [season.objectives]);
+
+    const banner = season.previousSeasonBanner;
     const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const [nextRace, setNextRace] = useState<Race | null>(null);
 
@@ -138,31 +91,13 @@ export default function Season2026() {
         updateCountdown();
         const interval = setInterval(updateCountdown, 1000);
         return () => clearInterval(interval);
-    }, []);
-
-    const seasonObjectives = [
-        {
-            icon: Trophy,
-            title: 'Championship Reclamation',
-            description: 'Converting 2025\'s consistent podiums into 2026 race wins.',
-        },
-        {
-            icon: Zap,
-            title: 'Technical Supremacy',
-            description: 'Utilizing the one-month gap between races for deep-data engine and transmission tear-downs.',
-        },
-        {
-            icon: Users,
-            title: 'Partner ROI',
-            description: 'Delivering premium visibility for Morris Lubricants, LKQ, and Equipment Hub across UK and international rounds.',
-        },
-    ];
+    }, [races]);
 
     const seasonSchema = {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        "name": "2026 British Truck Racing Championship Season",
-        "description": "The 2026 race calendar for Jenkins Motorsports.",
+        "name": `${season.year} British Truck Racing Championship Season`,
+        "description": `The ${season.year} race calendar for Jenkins Motorsports.`,
         "itemListElement": races.map((race, index) => ({
             "@type": "ListItem",
             "position": index + 1,
@@ -172,9 +107,9 @@ export default function Season2026() {
 
     return (
         <LandingLayout
-            title="2026 Season | The Pursuit of the #1 Plate"
-            description="7 Rounds. 34 Races. Follow Jenkins Motorsports' 2026 British Truck Racing Championship campaign. Race calendar, results, and countdown."
-            image="/images/dave_truck_on_racing_tracks_as_first.jpg"
+            title={pageMeta?.title ?? `${season.year} Season | The Pursuit of the #1 Plate`}
+            description={pageMeta?.description ?? `Follow Jenkins Motorsports' ${season.year} British Truck Racing Championship campaign — calendar, standings, and round results.`}
+            image={pageMeta?.image ?? '/images/dave_truck_on_racing_tracks_as_first.jpg'}
             schema={seasonSchema}
         >
             <div className="bg-black min-h-screen">
@@ -199,7 +134,7 @@ export default function Season2026() {
                                 <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
                                 <span className="font-heading text-sm uppercase tracking-[0.3em] text-primary flex items-center gap-2">
                                     <Flag className="h-4 w-4" />
-                                    2026 BTRC Campaign
+                                    {season.year} BTRC Campaign
                                 </span>
                                 <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
                             </div>
@@ -211,7 +146,7 @@ export default function Season2026() {
 
                             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
                                 Following a podium-clinching <span className="text-white font-semibold">3rd place finish in 2025</span>,
-                                Jenkins Motorsports enters 2026 to battle the fastest grid in BTRC history.
+                                Jenkins Motorsports enters {season.year} to battle the fastest grid in BTRC history.
                             </p>
                         </motion.div>
 
@@ -281,12 +216,12 @@ export default function Season2026() {
                                     <Award className="h-10 w-10 text-amber-500" />
                                 </div>
                                 <div className="text-center md:text-left">
-                                    <span className="text-amber-500 font-heading text-sm uppercase tracking-widest">2025 Season Result</span>
+                                    <span className="text-amber-500 font-heading text-sm uppercase tracking-widest">{banner?.eyebrow ?? '2025 Season Result'}</span>
                                     <h3 className="font-heading text-3xl md:text-4xl font-bold uppercase italic text-white mt-1">
-                                        3rd Place Overall — 413 Points
+                                        {banner?.title ?? '3rd Place Overall — 413 Points'}
                                     </h3>
                                     <p className="text-muted-foreground mt-2">
-                                        A hard-fought campaign with consistent podium finishes. Now, the singular objective: reclaiming the Division 1 Title.
+                                        {banner?.body ?? 'A hard-fought campaign with consistent podium finishes. Now, the singular objective: reclaiming the Division 1 Title.'}
                                     </p>
                                 </div>
                             </div>
@@ -306,7 +241,7 @@ export default function Season2026() {
                                     <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary" />
                                 </div>
                                 <h2 className="font-heading text-4xl md:text-5xl font-black uppercase italic text-white">
-                                    2026 Race <span className="text-primary">Calendar</span>
+                                    {season.year} Race <span className="text-primary">Calendar</span>
                                 </h2>
                             </div>
 
@@ -392,6 +327,127 @@ export default function Season2026() {
                                 ))}
                             </div>
                         </motion.div>
+
+                        {/* Published championship totals */}
+                        <motion.div
+                            initial={{ y: 30, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            viewport={{ once: true }}
+                            className="mb-24"
+                        >
+                            <StandingsTableBlock
+                                eyebrow="Championship"
+                                title={`${season.year} ${standingTable.divisionLabel}`}
+                                rows={standingTable.standings}
+                                standingStatus={standingTable.standingStatus}
+                            />
+                        </motion.div>
+
+                        {/* Round-by-round (per event, Division 1) */}
+                        {roundsWithData.length > 0 && (
+                            <motion.div
+                                initial={{ y: 30, opacity: 0 }}
+                                whileInView={{ y: 0, opacity: 1 }}
+                                viewport={{ once: true }}
+                                className="mb-24"
+                            >
+                                <div className="mb-12 text-center">
+                                    <span className="font-heading mb-2 block text-sm uppercase tracking-[0.3em] text-primary">Results</span>
+                                    <h2 className="font-heading text-4xl font-black uppercase italic text-white md:text-5xl">
+                                        Round-by-round <span className="text-primary">scores</span>
+                                    </h2>
+                                    <p className="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground">
+                                        Weekend points from each championship round (editor-maintained). Championship totals above remain the published summary.
+                                    </p>
+                                </div>
+
+                                <div className="space-y-3">
+                                    {roundsWithData.map((round) => {
+                                        const expanded = openRoundEvent === round.event;
+
+                                        return (
+                                            <div key={round.event} className="overflow-hidden border border-white/10 bg-secondary/20">
+                                                <button
+                                                    type="button"
+                                                    className="flex w-full items-center gap-4 px-4 py-4 text-left transition-colors hover:bg-white/5 md:px-6"
+                                                    onClick={() => setOpenRoundEvent(expanded ? null : round.event)}
+                                                >
+                                                    <span className="font-heading text-xl font-black text-primary">{round.event}</span>
+                                                    <span className="font-heading flex-1 text-lg font-bold uppercase italic text-white">
+                                                        {round.title}
+                                                    </span>
+                                                    <span className="hidden text-sm text-muted-foreground md:inline">
+                                                        {round.dateDisplay} · {round.venue}
+                                                    </span>
+                                                    <ChevronDown
+                                                        className={cn('h-5 w-5 shrink-0 text-muted-foreground transition-transform', expanded && 'rotate-180')}
+                                                    />
+                                                </button>
+                                                {expanded && (
+                                                    <div className="border-t border-white/10 px-2 pb-4 pt-2 md:px-4">
+                                                        <div className="overflow-x-auto">
+                                                            <table className="w-full min-w-[520px] border-collapse text-left text-sm">
+                                                                <thead className="bg-white/5 text-xs uppercase text-muted-foreground">
+                                                                    <tr>
+                                                                        <th className="p-3">Pos</th>
+                                                                        <th className="p-3">Driver</th>
+                                                                        <th className="hidden p-3 md:table-cell">Truck</th>
+                                                                        <th className="p-3 text-right">Pts</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {round.results.map((row, idx) => (
+                                                                        <tr
+                                                                            key={`${round.event}-${row.driverName}-${idx}`}
+                                                                            className={cn(
+                                                                                'border-t border-white/10',
+                                                                                row.isJenkins && 'bg-primary/15',
+                                                                            )}
+                                                                        >
+                                                                            <td className="p-3 font-mono text-white/80">
+                                                                                {row.position ?? '—'}
+                                                                            </td>
+                                                                            <td className="p-3 font-semibold text-white">
+                                                                                <span className="flex items-center gap-2">
+                                                                                    {row.profileImage ? (
+                                                                                        <img
+                                                                                            src={row.profileImage}
+                                                                                            alt={row.driverName}
+                                                                                            className="h-8 w-8 shrink-0 rounded-full border border-white/15 object-cover"
+                                                                                        />
+                                                                                    ) : null}
+                                                                                    <span>
+                                                                                        {row.driverName}
+                                                                                        {row.isJenkins && (
+                                                                                            <span className="ml-2 bg-primary/40 px-1.5 py-0.5 text-xs text-white">
+                                                                                                #{row.racingNumber ?? '69'}
+                                                                                            </span>
+                                                                                        )}
+                                                                                    </span>
+                                                                                </span>
+                                                                            </td>
+                                                                            <td className="hidden p-3 text-muted-foreground md:table-cell">{row.truck}</td>
+                                                                            <td className="p-3 text-right font-heading text-base font-black text-primary">
+                                                                                {row.points}
+                                                                                {row.status && row.status !== 'finished' && (
+                                                                                    <span className="ml-2 text-xs font-normal uppercase text-amber-500">
+                                                                                        {row.status}
+                                                                                    </span>
+                                                                                )}
+                                                                            </td>
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </motion.div>
+                        )}
 
                         {/* Key Battlegrounds */}
                         <motion.div
@@ -490,13 +546,13 @@ export default function Season2026() {
                                 <div>
                                     <div className="inline-flex items-center gap-2 mb-4">
                                         <Target className="h-5 w-5 text-amber-500" />
-                                        <span className="font-heading text-sm uppercase tracking-widest text-amber-500">2026 Regulations</span>
+                                        <span className="font-heading text-sm uppercase tracking-widest text-amber-500">{season.year} Regulations</span>
                                     </div>
                                     <h2 className="font-heading text-4xl md:text-5xl font-black uppercase italic text-white mb-6">
                                         Balance of <span className="text-amber-500">Performance</span>
                                     </h2>
                                     <p className="text-muted-foreground text-lg mb-6">
-                                        In 2026, the stakes are heightened by BoP regulations. Because David finished 3rd in the 2025 standings with <span className="text-white font-semibold">413 points</span>, he enters the new season as a marked man.
+                                        In {season.year}, the stakes are heightened by BoP regulations. Because David finished 3rd in the 2025 standings with <span className="text-white font-semibold">413 points</span>, he enters the new season as a marked man.
                                     </p>
                                     <div className="space-y-4">
                                         <div className="bg-secondary/30 border-l-4 border-amber-500 p-4">
@@ -542,7 +598,7 @@ export default function Season2026() {
                                     The <span className="text-primary">"Jenkins Way"</span>
                                 </h2>
                                 <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-                                    Three core objectives driving every decision in the 2026 campaign.
+                                    Three core objectives driving every decision in the {season.year} campaign.
                                 </p>
                             </div>
 

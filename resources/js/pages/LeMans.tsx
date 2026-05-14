@@ -1,32 +1,35 @@
 import LandingLayout from '@/layouts/LandingLayout';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import {
-    MapPin, Ship, Wrench, Flag, Globe, Thermometer, Timer, Users,
-    ChevronRight, Droplets, Gauge, Settings, FileText, Package,
+    MapPin, Ship, Wrench, Flag, Globe, Timer, Users,
+    ChevronRight, Settings, FileText, Package,
     Moon, Sun, Truck, ArrowRight, X, Calendar, Award, Camera
 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo, createElement } from 'react';
 import { Button } from '@/components/ui/button';
+import type { LucideIcon } from 'lucide-react';
+import type { PageProps } from '@inertiajs/core';
+import { motorsportLucideIcon } from '@/lib/motorsport-icons';
+import type { LeMansContent, LeMansJourneyLocation } from '@/types/motorsport';
 
-// Journey Map Location Data
 interface JourneyLocation {
     id: string;
     name: string;
     city: string;
-    icon: typeof MapPin;
+    icon: LucideIcon;
     color: string;
-    position: number; // percentage along the route
+    position: number;
     tasks: string[];
     description: string;
 }
 
-const journeyLocations: JourneyLocation[] = [
+const FALLBACK_JOURNEY_RAW: LeMansJourneyLocation[] = [
     {
         id: 'workshop',
         name: 'The Workshop',
         city: 'STONE',
-        icon: Wrench,
+        icon: 'Wrench',
         color: 'text-primary',
         position: 0,
         tasks: [
@@ -34,15 +37,15 @@ const journeyLocations: JourneyLocation[] = [
             'Pack specialized ZF gearbox components',
             'Prepare pressurized water-cooling tanks',
             'Load mobile workshop equipment',
-            'Final chassis inspection & sign-off'
+            'Final chassis inspection & sign-off',
         ],
-        description: 'The Stone, Staffordshire workshop transforms into a command center. Every component is checked, documented, and prepared for the 24-hour journey.'
+        description: 'The Stone, Staffordshire workshop transforms into a command center. Every component is checked, documented, and prepared for the 24-hour journey.',
     },
     {
         id: 'ferry',
         name: 'The Channel',
         city: 'DOVER → CALAIS',
-        icon: Ship,
+        icon: 'Ship',
         color: 'text-blue-400',
         position: 40,
         tasks: [
@@ -50,15 +53,15 @@ const journeyLocations: JourneyLocation[] = [
             'Technical equipment manifests',
             'International racing permits',
             'Vehicle weight certification',
-            '24-hour transit coordination'
+            '24-hour transit coordination',
         ],
-        description: 'The #69 MAN, mobile workshop, and hospitality suite are loaded onto specialized haulers for the crossing. Precision documentation ensures smooth border transitions.'
+        description: 'The #69 MAN, mobile workshop, and hospitality suite are loaded onto specialized haulers for the crossing. Precision documentation ensures smooth border transitions.',
     },
     {
         id: 'track',
         name: 'The Track',
         city: 'LE MANS',
-        icon: Flag,
+        icon: 'Flag',
         color: 'text-destructive',
         position: 100,
         tasks: [
@@ -66,11 +69,72 @@ const journeyLocations: JourneyLocation[] = [
             'Set up engine tear-down environment',
             'Calibrate water-spray cooling system',
             'Coordinate with Giti Tire technicians',
-            'Prepare B2B hospitality suite'
+            'Prepare B2B hospitality suite',
         ],
-        description: 'At Circuit Bugatti, the Jenkins footprint rises — a high-tech compound designed to host international partners and provide race-ready infrastructure.'
-    }
+        description: 'At Circuit Bugatti, the Jenkins footprint rises — a high-tech compound designed to host international partners and provide race-ready infrastructure.',
+    },
 ];
+
+function toJourneyLocations(raw: LeMansJourneyLocation[]): JourneyLocation[] {
+    return raw.map((l) => ({
+        ...l,
+        icon: motorsportLucideIcon(l.icon),
+    }));
+}
+
+const FALLBACK_CIRCUIT_FEATURES = [
+    { name: 'Dunlop Curve', description: 'The legendary high-speed sweeper requiring precise throttle control through the apex.' },
+    { name: 'Chicane de la Chapelle', description: 'Heavy braking zone demanding maximum water-spray cooling to prevent brake fade.' },
+    { name: 'Continental Tarmac', description: 'Wide, high-grip surface allowing for 5-wide racing into corners — unlike anything in the UK.' },
+];
+
+const FALLBACK_TECH_FOCUS_RAW = [
+    {
+        icon: 'Droplets',
+        title: 'Max-Flow Radiator',
+        description: 'Increased water-spray capacity for Juratek discs to combat extreme thermal energy in Bugatti\'s heavy braking zones.',
+        color: 'text-blue-400',
+    },
+    {
+        icon: 'Thermometer',
+        title: 'Heat Management',
+        description: 'September heat requires aggressive cooling strategies. Ambient temperature is the difference between podium and DNF.',
+        color: 'text-orange-400',
+    },
+    {
+        icon: 'Settings',
+        title: 'Tire Pressure Calibration',
+        description: 'Giti Tire technicians work alongside David to adjust pressures for higher track temperatures — preventing "cooked" rubber.',
+        color: 'text-primary',
+    },
+];
+
+const FALLBACK_EVENT_SCHEMA: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'SportsEvent',
+    name: '24 Heures Camions 2026',
+    startDate: '2026-09-26',
+    endDate: '2026-09-27',
+    eventStatus: 'https://schema.org/EventScheduled',
+    location: {
+        '@type': 'Place',
+        name: 'Circuit Bugatti',
+        address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Le Mans',
+            addressCountry: 'FR',
+        },
+    },
+    performer: {
+        '@type': 'SportsTeam',
+        name: 'Jenkins Motorsports',
+    },
+    description: 'The French round of the British Truck Racing Championship and 24 Heures Camions at Le Mans.',
+};
+
+type LeMansPageProps = PageProps & {
+    content: LeMansContent;
+};
 
 // Interactive Hotspot Component
 function JourneyHotspot({
@@ -115,9 +179,9 @@ function JourneyHotspot({
 }
 
 // Journey Map Component
-function JourneyMap() {
+function JourneyMap({ locations }: { locations: JourneyLocation[] }) {
     const [activeLocation, setActiveLocation] = useState<string | null>(null);
-    const activeData = journeyLocations.find(loc => loc.id === activeLocation);
+    const activeData = locations.find((loc) => loc.id === activeLocation);
 
     return (
         <div className="relative py-16">
@@ -172,7 +236,7 @@ function JourneyMap() {
                 </div>
 
                 {/* Hotspots */}
-                {journeyLocations.map((location) => (
+                {locations.map((location) => (
                     <JourneyHotspot
                         key={location.id}
                         location={location}
@@ -209,7 +273,7 @@ function JourneyMap() {
                                 <div>
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className={`p-3 rounded-full bg-black/50 border border-white/10`}>
-                                            <activeData.icon className={`h-6 w-6 ${activeData.color}`} />
+                                            {createElement(activeData.icon, { className: `h-6 w-6 ${activeData.color}` })}
                                         </div>
                                         <div>
                                             <span className={`text-xs uppercase tracking-widest ${activeData.color}`}>{activeData.city}</span>
@@ -260,66 +324,36 @@ function JourneyMap() {
 }
 
 export default function LeMans() {
+    const { content } = usePage<LeMansPageProps>().props;
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({ target: containerRef });
     const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
 
-    const circuitFeatures = [
-        { name: 'Dunlop Curve', description: 'The legendary high-speed sweeper requiring precise throttle control through the apex.' },
-        { name: 'Chicane de la Chapelle', description: 'Heavy braking zone demanding maximum water-spray cooling to prevent brake fade.' },
-        { name: 'Continental Tarmac', description: 'Wide, high-grip surface allowing for 5-wide racing into corners — unlike anything in the UK.' },
-    ];
+    const journeyLocations = useMemo(() => {
+        const raw = content?.journey_locations?.locations ?? FALLBACK_JOURNEY_RAW;
 
-    const technicalFocus = [
-        {
-            icon: Droplets,
-            title: 'Max-Flow Radiator',
-            description: 'Increased water-spray capacity for Juratek discs to combat extreme thermal energy in Bugatti\'s heavy braking zones.',
-            color: 'text-blue-400'
-        },
-        {
-            icon: Thermometer,
-            title: 'Heat Management',
-            description: 'September heat requires aggressive cooling strategies. Ambient temperature is the difference between podium and DNF.',
-            color: 'text-orange-400'
-        },
-        {
-            icon: Settings,
-            title: 'Tire Pressure Calibration',
-            description: 'Giti Tire technicians work alongside David to adjust pressures for higher track temperatures — preventing "cooked" rubber.',
-            color: 'text-primary'
-        },
-    ];
+        return toJourneyLocations(raw);
+    }, [content?.journey_locations?.locations]);
 
-    const eventSchema = {
-        "@context": "https://schema.org",
-        "@type": "SportsEvent",
-        "name": "24 Heures Camions 2026",
-        "startDate": "2026-09-26",
-        "endDate": "2026-09-27",
-        "eventStatus": "https://schema.org/EventScheduled",
-        "location": {
-            "@type": "Place",
-            "name": "Circuit Bugatti",
-            "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Le Mans",
-                "addressCountry": "FR"
-            }
-        },
-        "performer": {
-            "@type": "SportsTeam",
-            "name": "Jenkins Motorsports"
-        },
-        "description": "The French round of the British Truck Racing Championship and 24 Heures Camions at Le Mans."
-    };
+    const circuitFeatures = content?.circuit_features?.items ?? FALLBACK_CIRCUIT_FEATURES;
+
+    const technicalFocus = useMemo(() => {
+        const items = content?.technical_focus?.items ?? FALLBACK_TECH_FOCUS_RAW;
+
+        return items.map((item) => ({
+            ...item,
+            icon: motorsportLucideIcon(item.icon),
+        }));
+    }, [content?.technical_focus?.items]);
+
+    const eventSchema = (content?.event_schema as Record<string, unknown> | undefined) ?? FALLBACK_EVENT_SCHEMA;
 
     return (
         <LandingLayout
             title="Le Mans International | 24 Heures Camions"
             description="Jenkins Motorsports takes on the world at the iconic Circuit Bugatti, Le Mans. Experience the journey from Stone to France for the 24 Heures Camions."
             image="/images/multiple_trucks_on_racing_tracks_2.jpg"
-            schema={eventSchema}
+            schema={eventSchema as object}
         >
             <div ref={containerRef} className="bg-black min-h-screen">
 
@@ -507,7 +541,7 @@ export default function LeMans() {
                                 </p>
                             </div>
 
-                            <JourneyMap />
+                            <JourneyMap locations={journeyLocations} />
 
                             {/* Logistics Details */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
@@ -583,7 +617,7 @@ export default function LeMans() {
                                         className="bg-gradient-to-b from-secondary/30 to-transparent border border-white/10 p-8 group hover:border-white/30 transition-colors"
                                     >
                                         <div className={`w-16 h-16 rounded-full bg-black/50 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                                            <item.icon className={`h-8 w-8 ${item.color}`} />
+                                            {createElement(item.icon, { className: `h-8 w-8 ${item.color}` })}
                                         </div>
                                         <h3 className="font-heading text-xl font-bold uppercase italic text-white mb-3">
                                             {item.title}

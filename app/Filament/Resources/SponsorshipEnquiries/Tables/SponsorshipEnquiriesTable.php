@@ -2,13 +2,16 @@
 
 namespace App\Filament\Resources\SponsorshipEnquiries\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
+use App\Models\SponsorshipEnquiry;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
+/**
+ * Table definition for {@see \App\Filament\Resources\SponsorshipEnquiries\SponsorshipEnquiryResource}.
+ */
 class SponsorshipEnquiriesTable
 {
     public static function configure(Table $table): Table
@@ -16,13 +19,16 @@ class SponsorshipEnquiriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
                 TextColumn::make('company')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('interest_tier')
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -34,16 +40,20 @@ class SponsorshipEnquiriesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('interest_tier')
+                    ->label('Interest tier')
+                    ->options(fn (): array => SponsorshipEnquiry::query()
+                        ->select('interest_tier')
+                        ->whereNotNull('interest_tier')
+                        ->distinct()
+                        ->orderBy('interest_tier')
+                        ->pluck('interest_tier', 'interest_tier')
+                        ->all()),
             ])
+            ->defaultSort('created_at', 'desc')
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

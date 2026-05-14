@@ -2,17 +2,21 @@
 
 namespace App\Filament\Resources\BlogPosts\Tables;
 
+use App\Models\BlogPost;
+use App\Support\PublicMediaUrl;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
-use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Table;
 
+/**
+ * Table definition for {@see \App\Filament\Resources\BlogPosts\BlogPostResource}.
+ */
 class BlogPostsTable
 {
     public static function configure(Table $table): Table
@@ -22,12 +26,14 @@ class BlogPostsTable
                 ImageColumn::make('image_path')
                     ->label('Thumbnail')
                     ->circular()
-                    ->square(),
+                    ->square()
+                    ->checkFileExistence(false)
+                    ->getStateUsing(fn (BlogPost $record): ?string => PublicMediaUrl::absoluteUrl($record->image_path)),
 
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable()
-                    ->description(fn($record) => $record->slug)
+                    ->description(fn ($record) => $record->slug)
                     ->wrap(),
 
                 TextColumn::make('category.name')
@@ -44,7 +50,7 @@ class BlogPostsTable
                     ->label('Published')
                     ->dateTime('M j, Y H:i')
                     ->sortable()
-                    ->color(fn($state) => $state && $state <= now() ? 'success' : 'warning')
+                    ->color(fn ($state) => $state && $state <= now() ? 'success' : 'warning')
                     ->placeholder('Draft'),
 
                 IconColumn::make('is_featured')
@@ -70,14 +76,15 @@ class BlogPostsTable
                 TernaryFilter::make('published')
                     ->label('Publication Status')
                     ->queries(
-                        true: fn($query) => $query->whereNotNull('published_at')->where('published_at', '<=', now()),
-                        false: fn($query) => $query->whereNull('published_at')->orWhere('published_at', '>', now()),
+                        true: fn ($query) => $query->whereNotNull('published_at')->where('published_at', '<=', now()),
+                        false: fn ($query) => $query->whereNull('published_at')->orWhere('published_at', '>', now()),
                     ),
             ])
+            ->defaultSort('published_at', 'desc')
             ->recordActions([
                 EditAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

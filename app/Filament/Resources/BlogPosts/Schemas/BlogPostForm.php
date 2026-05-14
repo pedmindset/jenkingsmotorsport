@@ -5,7 +5,6 @@ namespace App\Filament\Resources\BlogPosts\Schemas;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -17,6 +16,9 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
+/**
+ * Form schema for {@see \App\Models\BlogPost} in Filament.
+ */
 class BlogPostForm
 {
     public static function configure(Schema $schema): Schema
@@ -34,7 +36,7 @@ class BlogPostForm
                                             ->placeholder('Enter a catchy title')
                                             ->required()
                                             ->live(onBlur: true)
-                                            ->afterStateUpdated(fn(string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+                                            ->afterStateUpdated(fn (string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
 
                                         TextInput::make('slug')
                                             ->placeholder('url-friendly-slug')
@@ -69,7 +71,7 @@ class BlogPostForm
                                                 TextInput::make('name')
                                                     ->required()
                                                     ->live(onBlur: true)
-                                                    ->afterStateUpdated(fn(string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+                                                    ->afterStateUpdated(fn (string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
                                                 TextInput::make('slug')->required(),
                                             ]),
 
@@ -81,7 +83,7 @@ class BlogPostForm
                                                 TextInput::make('name')
                                                     ->required()
                                                     ->live(onBlur: true)
-                                                    ->afterStateUpdated(fn(string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+                                                    ->afterStateUpdated(fn (string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
                                                 TextInput::make('slug')->required(),
                                             ]),
 
@@ -96,6 +98,8 @@ class BlogPostForm
                                         FileUpload::make('image_path')
                                             ->label('Featured Image')
                                             ->image()
+                                            ->disk('public')
+                                            ->visibility('public')
                                             ->imageEditor()
                                             ->directory('blog-images'),
 
