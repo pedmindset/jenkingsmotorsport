@@ -57,6 +57,48 @@ final class PublicMediaUrl
     }
 
     /**
+     * Path relative to the `public` storage disk, when the stored value refers to that disk.
+     *
+     * Returns null for site-root paths (e.g. /images/…), absolute URLs, or empty values.
+     */
+    public static function publicDiskRelativePath(?string $stored): ?string
+    {
+        if ($stored === null || $stored === '') {
+            return null;
+        }
+
+        $value = trim($stored);
+
+        if ($value === '') {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+            return null;
+        }
+
+        if (str_starts_with($value, '/storage/')) {
+            $relative = ltrim(substr($value, strlen('/storage/')), '/');
+
+            return $relative !== '' ? $relative : null;
+        }
+
+        if (str_starts_with($value, '/')) {
+            return null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Whether the stored path can be hydrated into a Filament public-disk FileUpload field.
+     */
+    public static function isPublicDiskPath(?string $stored): bool
+    {
+        return self::publicDiskRelativePath($stored) !== null;
+    }
+
+    /**
      * Absolute URL for table previews, meta tags, and similar.
      */
     public static function absoluteUrl(?string $stored): ?string

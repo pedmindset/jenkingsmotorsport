@@ -7,9 +7,7 @@ use App\Models\User;
 
 function filamentDashboardAdmin(): User
 {
-    return User::factory()->create([
-        'email' => 'emmarthurson@gmail.com',
-    ]);
+    return User::factory()->admin()->create();
 }
 
 it('loads the custom Filament dashboard', function (): void {

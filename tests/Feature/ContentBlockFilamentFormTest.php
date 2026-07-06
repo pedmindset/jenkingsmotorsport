@@ -11,9 +11,7 @@ use Livewire\Livewire;
 
 function contentBlockFilamentUser(): User
 {
-    return User::factory()->create([
-        'email' => 'emmarthurson@gmail.com',
-    ]);
+    return User::factory()->admin()->create();
 }
 
 beforeEach(fn () => $this->actingAs(contentBlockFilamentUser()));

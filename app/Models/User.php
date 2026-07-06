@@ -16,6 +16,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string $name
  * @property string $email
  * @property string $password
+ * @property bool $is_admin
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
  * @property \Illuminate\Support\Carbon|null $two_factor_confirmed_at
@@ -36,6 +37,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -60,6 +62,7 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
@@ -69,6 +72,10 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canAccessFilamentPanel(): bool
     {
+        if ($this->is_admin) {
+            return true;
+        }
+
         $normalized = strtolower(trim((string) $this->email));
 
         if ($normalized === '') {

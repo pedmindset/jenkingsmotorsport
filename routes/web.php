@@ -58,10 +58,4 @@ Route::get('/blog/category/{category:slug}', [BlogController::class, 'showByCate
 Route::get('/blog/tag/{tag:slug}', [BlogController::class, 'showByTag'])->name('blog.tag');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
-});
-
 require __DIR__.'/settings.php';

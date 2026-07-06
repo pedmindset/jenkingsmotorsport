@@ -7,9 +7,11 @@ namespace App\Console\Commands;
 use App\Models\Driver;
 use App\Models\Season;
 use App\Models\Standing;
+use App\Support\Motorsport\BtrcStandingsFetcher;
+use App\Support\Motorsport\BtrcStandingsHtmlParser;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 /**
  * Best-effort import of published BTRC division totals from HTML into {@see Standing} rows.
@@ -30,7 +32,8 @@ class MotorsportImportBtrcStandingsCommand extends Command
         {--season= : Target championship season year (e.g. 2026)}
         {--division=1 : Published division number (1 = Division 1)}
         {--dry-run : Output parsed rows without saving}
-        {--url= : Override standings URL from config}';
+        {--url= : Override standings URL from config}
+        {--html= : Import from a local HTML snapshot instead of fetching remotely}';
 
     /**
      * The console command description.
@@ -42,7 +45,7 @@ class MotorsportImportBtrcStandingsCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): int
+    public function handle(BtrcStandingsHtmlParser $parser, BtrcStandingsFetcher $fetcher): int
     {
         $year = $this->option('season');
         if (! is_string($year) || $year === '' || ! ctype_digit($year)) {
@@ -59,37 +62,53 @@ class MotorsportImportBtrcStandingsCommand extends Command
         }
 
         $divisionKey = (string) $this->option('division');
-        $divisionLabel = match ($divisionKey) {
-            '1' => 'BTRC Division 1',
-            '2' => 'BTRC Division 2',
-            default => 'BTRC Division '.$divisionKey,
-        };
-
-        $url = $this->option('url');
-        if (! is_string($url) || $url === '') {
-            $url = (string) config('btrc_import.standings_url');
-        }
-
-        $this->info("Fetching: {$url}");
-
-        $response = Http::timeout((int) config('btrc_import.timeout'))
-            ->withHeaders([
-                'User-Agent' => (string) config('btrc_import.user_agent'),
-                'Accept' => 'text/html,application/xhtml+xml',
-            ])
-            ->get($url);
-
-        usleep((int) config('btrc_import.request_delay_seconds') * 1_000_000);
-
-        if (! $response->successful()) {
-            $this->error('HTTP request failed: '.$response->status());
+        if (! ctype_digit($divisionKey) || (int) $divisionKey < 1) {
+            $this->error('Provide a positive numeric --division (e.g. --division=1).');
 
             return self::FAILURE;
         }
 
-        $parsed = $this->parseStandingsTable($response->body());
+        $divisionNumber = (int) $divisionKey;
+        $divisionLabel = match ($divisionNumber) {
+            1 => 'BTRC Division 1',
+            2 => 'BTRC Division 2',
+            default => 'BTRC Division '.$divisionNumber,
+        };
+
+        $htmlPath = $this->option('html');
+        if (is_string($htmlPath) && $htmlPath !== '') {
+            $this->info("Reading local HTML: {$htmlPath}");
+
+            try {
+                $html = $fetcher->readFromFile($htmlPath);
+            } catch (RuntimeException $exception) {
+                $this->error($exception->getMessage());
+
+                return self::FAILURE;
+            }
+        } else {
+            $url = $this->option('url');
+            $overrideUrl = is_string($url) && $url !== '' ? $url : null;
+
+            try {
+                if ($overrideUrl !== null) {
+                    $this->info("Fetching: {$overrideUrl}");
+                    $html = $fetcher->fetchFromUrl($overrideUrl);
+                } else {
+                    $result = $fetcher->fetchStandingsHtml();
+                    $this->info('Fetching: '.$result['source']);
+                    $html = $result['html'];
+                }
+            } catch (RuntimeException $exception) {
+                $this->error($exception->getMessage());
+
+                return self::FAILURE;
+            }
+        }
+
+        $parsed = $parser->parse($html, $divisionNumber);
         if ($parsed === []) {
-            $this->warn('No standings table with NAME / POS / POINTS headers was found. The remote HTML layout may have changed.');
+            $this->warn('No standings rows were found for division '.$divisionNumber.'. The remote HTML layout or tab structure may have changed.');
 
             return self::FAILURE;
         }
@@ -149,83 +168,6 @@ class MotorsportImportBtrcStandingsCommand extends Command
         $this->info('Standing rows updated. Verify figures against the official championship bulletin.');
 
         return self::SUCCESS;
-    }
-
-    /**
-     * @return list<array{name: string, rank: int, points: int}>
-     */
-    private function parseStandingsTable(string $html): array
-    {
-        libxml_use_internal_errors(true);
-        $document = new \DOMDocument;
-        $document->loadHTML('<?xml encoding="utf-8" ?>'.$html, LIBXML_NOERROR | LIBXML_NOWARNING);
-        libxml_clear_errors();
-
-        $xpath = new \DOMXPath($document);
-
-        foreach ($xpath->query('//table') as $tableNode) {
-            if (! $tableNode instanceof \DOMElement) {
-                continue;
-            }
-
-            $headerCells = $xpath->query('.//thead//tr/th', $tableNode);
-            if ($headerCells === false || $headerCells->length === 0) {
-                continue;
-            }
-
-            $headers = [];
-            foreach ($headerCells as $thNode) {
-                $headers[] = strtoupper(trim($thNode->textContent));
-            }
-
-            if ($headers !== ['NAME', 'POS', 'POINTS']) {
-                continue;
-            }
-
-            $parsedRows = [];
-            $bodyRows = $xpath->query('.//tbody/tr', $tableNode);
-            if ($bodyRows === false) {
-                continue;
-            }
-
-            foreach ($bodyRows as $trNode) {
-                if (! $trNode instanceof \DOMElement) {
-                    continue;
-                }
-
-                $cells = $xpath->query('./td', $trNode);
-                if ($cells === false || $cells->length < 3) {
-                    continue;
-                }
-
-                $name = trim($cells->item(0)?->textContent ?? '');
-                if ($name === '') {
-                    continue;
-                }
-
-                $rankRaw = strtoupper(trim($cells->item(1)?->textContent ?? ''));
-                $pointsRaw = strtoupper(trim($cells->item(2)?->textContent ?? ''));
-
-                $rankDigits = preg_replace('/\D+/', '', $rankRaw) ?? '';
-                $pointsDigits = preg_replace('/\D+/', '', $pointsRaw) ?? '';
-
-                if ($rankDigits === '' || $pointsDigits === '') {
-                    continue;
-                }
-
-                $parsedRows[] = [
-                    'name' => $name,
-                    'rank' => (int) $rankDigits,
-                    'points' => (int) $pointsDigits,
-                ];
-            }
-
-            if ($parsedRows !== []) {
-                return $parsedRows;
-            }
-        }
-
-        return [];
     }
 
     private function resolveDriver(string $rawName): ?Driver

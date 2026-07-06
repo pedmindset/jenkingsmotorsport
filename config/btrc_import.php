@@ -11,14 +11,30 @@
 return [
     'standings_url' => env('BTRC_STANDINGS_URL', 'https://btrc.co/standings/'),
 
+    'use_wordpress_api' => filter_var(env('BTRC_IMPORT_USE_WORDPRESS_API', true), FILTER_VALIDATE_BOOL),
+
+    'standings_api_url' => env(
+        'BTRC_STANDINGS_API_URL',
+        'https://btrc.co/wp-json/wp/v2/pages?slug=standings',
+    ),
+
     'timeout' => (int) env('BTRC_IMPORT_TIMEOUT', 30),
 
     'request_delay_seconds' => (int) env('BTRC_IMPORT_DELAY_SECONDS', 1),
 
     'user_agent' => env(
         'BTRC_IMPORT_USER_AGENT',
-        'JenkinsMotorsportBot/1.0 (+'.env('APP_URL', 'https://example.test').'/contact)'
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
     ),
+
+    /**
+     * Extra HTTP headers merged onto the defaults in {@see \App\Support\Motorsport\BtrcStandingsFetcher}.
+     *
+     * @var array<string, string>
+     */
+    'http_headers' => array_filter([
+        'Referer' => env('BTRC_IMPORT_REFERER', 'https://btrc.co/'),
+    ]),
 
     /**
      * Map ALL CAPS squished names as they may appear in public HTML to local driver slugs.

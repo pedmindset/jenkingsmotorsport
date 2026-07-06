@@ -28,3 +28,15 @@ it('resolves absolute URLs for meta and previews', function (): void {
     $u = PublicMediaUrl::absoluteUrl('blog-images/z.jpg');
     expect($u)->toBeString()->toContain('/storage/blog-images/z.jpg');
 });
+
+it('extracts public disk relative paths for Filament uploads', function (): void {
+    expect(PublicMediaUrl::publicDiskRelativePath('media/gallery/photo.jpg'))->toBe('media/gallery/photo.jpg');
+    expect(PublicMediaUrl::publicDiskRelativePath('/storage/media/gallery/photo.jpg'))->toBe('media/gallery/photo.jpg');
+    expect(PublicMediaUrl::publicDiskRelativePath('/images/legacy.jpg'))->toBeNull();
+    expect(PublicMediaUrl::publicDiskRelativePath('https://example.com/a.png'))->toBeNull();
+});
+
+it('detects whether a stored path belongs on the public disk', function (): void {
+    expect(PublicMediaUrl::isPublicDiskPath('media/gallery/photo.jpg'))->toBeTrue();
+    expect(PublicMediaUrl::isPublicDiskPath('/images/legacy.jpg'))->toBeFalse();
+});

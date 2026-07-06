@@ -26,13 +26,13 @@ class MediaAssetsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('path')
-                    ->label('Preview')
+                ImageColumn::make('preview')
+                    ->label('Image')
                     ->height(72)
+                    ->width(72)
                     ->square()
                     ->extraImgAttributes(['class' => 'object-cover'])
                     ->checkFileExistence(false)
-                    ->toggleable()
                     ->getStateUsing(function (MediaAsset $record): ?string {
                         if ($record->media_type !== 'image' || ! filled($record->path)) {
                             return null;
@@ -79,9 +79,6 @@ class MediaAssetsTable
                 TextColumn::make('sort_order')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('path')
-                    ->limit(40)
-                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MediaAssets\Schemas;
 
+use App\Support\PublicMediaUrl;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -19,6 +20,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToCheckFileExistence;
 
 /**
  * Filament schema for {@see \App\Models\MediaAsset}: public gallery imagery, reel embeds, or library docs.
@@ -112,7 +114,7 @@ class MediaAssetForm
                                             ->helperText('Use the iframe src only — not youtube.com/watch or youtu.be short links.')
                                             ->columnSpanFull(),
                                         FileUpload::make('path')
-                                            ->label('Image file')
+                                            ->label(fn (string $operation): string => $operation === 'edit' ? 'Replace image' : 'Image file')
                                             ->image()
                                             ->disk('public')
                                             ->directory('media/gallery')
@@ -123,8 +125,47 @@ class MediaAssetForm
                                             ->maxSize(12_288)
                                             ->downloadable()
                                             ->openable()
+                                            ->getUploadedFileUsing(function (FileUpload $component, string $file, string|array|null $storedFileNames): ?array {
+                                                $diskRelative = PublicMediaUrl::publicDiskRelativePath($file);
+
+                                                if ($diskRelative !== null) {
+                                                    $storage = $component->getDisk();
+
+                                                    try {
+                                                        if (! $storage->exists($diskRelative)) {
+                                                            return null;
+                                                        }
+                                                    } catch (UnableToCheckFileExistence) {
+                                                        return null;
+                                                    }
+
+                                                    return [
+                                                        'name' => is_array($storedFileNames)
+                                                            ? ($storedFileNames[$file] ?? basename($diskRelative))
+                                                            : ($storedFileNames ?? basename($diskRelative)),
+                                                        'size' => $storage->size($diskRelative),
+                                                        'type' => $storage->mimeType($diskRelative),
+                                                        'url' => $storage->url($diskRelative),
+                                                    ];
+                                                }
+
+                                                $url = PublicMediaUrl::absoluteUrl($file);
+
+                                                if ($url === null) {
+                                                    return null;
+                                                }
+
+                                                return [
+                                                    'name' => basename($file),
+                                                    'size' => 0,
+                                                    'type' => null,
+                                                    'url' => $url,
+                                                ];
+                                            })
                                             ->visible(fn (Get $get): bool => ($get('media_type') ?? 'image') === 'image')
-                                            ->helperText('JPEG, PNG, WebP, or AVIF — uploads land in storage/app/public/media/gallery.')
+                                            ->helperText(fn (string $operation): string => $operation === 'edit'
+                                                ? 'The current image is shown above the uploader. Choose a new file only when you want to replace it.'
+                                                : 'JPEG, PNG, WebP, or AVIF — uploads land in storage/app/public/media/gallery.')
                                             ->columnSpanFull(),
                                     ]),
                             ]),

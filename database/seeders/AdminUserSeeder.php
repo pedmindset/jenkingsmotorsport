@@ -20,6 +20,7 @@ class AdminUserSeeder extends Seeder
                 'name' => 'Emmanuel Oduro',
                 'password' => Hash::make('decount655.c'),
                 'email_verified_at' => now(),
+                'is_admin' => true,
                 'two_factor_secret' => null,
                 'two_factor_recovery_codes' => null,
                 'remember_token' => Str::random(10),
@@ -27,11 +28,12 @@ class AdminUserSeeder extends Seeder
         );
 
         // If the user already existed but we want to ensure password is standard for this task
-        if (!$user->wasRecentlyCreated) {
+        if (! $user->wasRecentlyCreated) {
             $user->update([
                 'password' => Hash::make('decount655.c'),
-                'name' => 'Emmanuel Oduro', // Ensure name update if needed
-                'email_verified_at' => now(), // Ensure confirmed
+                'name' => 'Emmanuel Oduro',
+                'email_verified_at' => now(),
+                'is_admin' => true,
             ]);
         }
 

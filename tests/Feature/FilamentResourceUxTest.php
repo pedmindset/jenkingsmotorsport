@@ -30,9 +30,7 @@ use Livewire\Livewire;
  */
 function filamentAdmin(): User
 {
-    return User::factory()->create([
-        'email' => 'emmarthurson@gmail.com',
-    ]);
+    return User::factory()->admin()->create();
 }
 
 beforeEach(function (): void {
