@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BlogPosts\Schemas;
 
+use App\Filament\Support\PublicMediaFileUpload;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
@@ -95,13 +96,15 @@ class BlogPostForm
 
                                 Section::make('Media')
                                     ->schema([
-                                        FileUpload::make('image_path')
-                                            ->label('Featured Image')
-                                            ->image()
-                                            ->disk('public')
-                                            ->visibility('public')
-                                            ->imageEditor()
-                                            ->directory('blog-images'),
+                                        PublicMediaFileUpload::configure(
+                                            FileUpload::make('image_path')
+                                                ->label('Featured Image')
+                                                ->image()
+                                                ->disk('public')
+                                                ->visibility('public')
+                                                ->imageEditor()
+                                                ->directory('blog-images')
+                                        ),
 
                                         TextInput::make('video_url')
                                             ->placeholder('https://youtube.com/...')

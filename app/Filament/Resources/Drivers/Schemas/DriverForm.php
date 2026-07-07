@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Drivers\Schemas;
 
+use App\Filament\Support\PublicMediaFileUpload;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -60,14 +61,16 @@ class DriverForm
                             ->columns(2),
                         Section::make('Profile')
                             ->schema([
-                                FileUpload::make('profile_image_path')
-                                    ->label('Profile photo')
-                                    ->image()
-                                    ->disk('public')
-                                    ->directory('drivers')
-                                    ->visibility('public')
-                                    ->imageEditor()
-                                    ->nullable(),
+                                PublicMediaFileUpload::configure(
+                                    FileUpload::make('profile_image_path')
+                                        ->label('Profile photo')
+                                        ->image()
+                                        ->disk('public')
+                                        ->directory('drivers')
+                                        ->visibility('public')
+                                        ->imageEditor()
+                                        ->nullable()
+                                ),
                             ]),
                     ])
                     ->columnSpanFull(),

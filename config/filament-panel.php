@@ -17,4 +17,12 @@ return [
         static fn (string $email): string => strtolower(trim($email)),
         explode(',', (string) env('FILAMENT_PANEL_USER_EMAILS', 'emmarthurson@gmail.com')),
     ))),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Panel path (URL segment)
+    |--------------------------------------------------------------------------
+    */
+
+    'path' => 'admin',
 ];

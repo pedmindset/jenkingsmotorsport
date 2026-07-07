@@ -11,6 +11,18 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
+    $user = User::factory()->admin()->create();
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect('/admin');
+});
+
+test('non-admin users are redirected home after login', function () {
     $user = User::factory()->create();
 
     $response = $this->post(route('login.store'), [

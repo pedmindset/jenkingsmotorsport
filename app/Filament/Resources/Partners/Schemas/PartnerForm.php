@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Partners\Schemas;
 
+use App\Filament\Support\PublicMediaFileUpload;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Textarea;
@@ -54,22 +55,26 @@ class PartnerForm
                         Section::make('Links & assets')
                             ->description('Images are stored on the public disk and exposed under /storage/… Existing /images/… paths in the database still work on the site until you re-upload.')
                             ->schema([
-                                FileUpload::make('logo_path')
-                                    ->label('Logo')
-                                    ->image()
-                                    ->disk('public')
-                                    ->directory('partners/logos')
-                                    ->visibility('public')
-                                    ->imageEditor()
-                                    ->required(),
-                                FileUpload::make('image_path')
-                                    ->label('Card / hero background')
-                                    ->image()
-                                    ->disk('public')
-                                    ->directory('partners/cards')
-                                    ->visibility('public')
-                                    ->imageEditor()
-                                    ->required(),
+                                PublicMediaFileUpload::configure(
+                                    FileUpload::make('logo_path')
+                                        ->label('Logo')
+                                        ->image()
+                                        ->disk('public')
+                                        ->directory('partners/logos')
+                                        ->visibility('public')
+                                        ->imageEditor()
+                                        ->required()
+                                ),
+                                PublicMediaFileUpload::configure(
+                                    FileUpload::make('image_path')
+                                        ->label('Card / hero background')
+                                        ->image()
+                                        ->disk('public')
+                                        ->directory('partners/cards')
+                                        ->visibility('public')
+                                        ->imageEditor()
+                                        ->required()
+                                ),
                                 TextInput::make('url')
                                     ->label('Partner website')
                                     ->url()

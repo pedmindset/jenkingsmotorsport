@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Vehicles\Schemas;
 
+use App\Filament\Support\PublicMediaFileUpload;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -40,14 +41,16 @@ class VehicleForm
                                 TextInput::make('racing_number')
                                     ->maxLength(16)
                                     ->label('Racing number'),
-                                FileUpload::make('hero_image_path')
-                                    ->label('Hero image')
-                                    ->image()
-                                    ->disk('public')
-                                    ->directory('vehicles/hero')
-                                    ->visibility('public')
-                                    ->imageEditor()
-                                    ->nullable(),
+                                PublicMediaFileUpload::configure(
+                                    FileUpload::make('hero_image_path')
+                                        ->label('Hero image')
+                                        ->image()
+                                        ->disk('public')
+                                        ->directory('vehicles/hero')
+                                        ->visibility('public')
+                                        ->imageEditor()
+                                        ->nullable()
+                                ),
                             ])
                             ->columns(2),
                         Section::make('Story')
