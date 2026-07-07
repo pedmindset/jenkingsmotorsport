@@ -9,6 +9,7 @@ use App\Filament\Resources\PartnershipTiers\PartnershipTierResource;
 use App\Filament\Resources\RaceEvents\RaceEventResource;
 use App\Filament\Resources\Seasons\Pages\EditSeason;
 use App\Filament\Resources\Seasons\SeasonResource;
+use App\Filament\Resources\Standings\Pages\EditStanding;
 use App\Filament\Resources\Standings\Pages\ListStandings;
 use App\Filament\Resources\Standings\StandingResource;
 use App\Filament\Resources\Vehicles\Pages\EditVehicle;
@@ -201,6 +202,39 @@ it('renders standings list with filters and seeded row content', function (): vo
         ->assertSee('Standing Driver')
         ->filterTable('division', 'BTRC Division 1')
         ->assertSee('Standing Driver');
+});
+
+it('can save an edited standing row', function (): void {
+    $season = Season::query()->create([
+        'year' => 2025,
+        'slug' => '2025-season',
+        'title' => '2025 Season',
+        'is_active' => true,
+    ]);
+
+    $driver = Driver::query()->create([
+        'slug' => 'editable-standing-driver',
+        'name' => 'Editable Standing Driver',
+        'sort_order' => 3,
+    ]);
+
+    $standing = Standing::query()->create([
+        'season_id' => $season->getKey(),
+        'driver_id' => $driver->getKey(),
+        'rank' => 2,
+        'points' => 50,
+        'division' => 'BTRC Division 1',
+        'status' => 'final',
+    ]);
+
+    Livewire::test(EditStanding::class, ['record' => $standing->getKey()])
+        ->fillForm([
+            'points' => 55,
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($standing->fresh()->points)->toBe(55);
 });
 
 it('rejects creating a video gallery item without an embed URL', function (): void {
